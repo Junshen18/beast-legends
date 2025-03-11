@@ -4,7 +4,7 @@
       { "label": "About", "href": "#" },
       { "label": "Story", "href": "#" },
       { "label": "More", "href": "#" },
-      { "label": "Marketplace", "href": "#" }
+      { "label": "Marketplace", "href": "marketplace" }
     ]
   },
   "hero": {

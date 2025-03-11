@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import WalletButton from "../WalletButton";
 import data from "../../data/landing-page.json";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Navigation() {
   const [isOverWhiteSection, setIsOverWhiteSection] = useState(false);
@@ -39,13 +40,15 @@ export default function Navigation() {
   return (
     <nav className="fixed w-full bg-transparent z-50 font-dark-mystic">
       <div className="mx-auto px-12 h-18 flex items-center justify-between">
-        <Image
-          src="/landing-page/name.svg"
-          alt="Mystic Kaizer Logo"
-          width={190}
-          height={168}
-          className={`${isOverWhiteSection ? 'invert' : ''}`}
-        />
+        <Link href="/">
+          <Image
+            src="/landing-page/name.svg"
+            alt="Mystic Kaizer Logo"
+            width={190}
+            height={168}
+            className={`${isOverWhiteSection ? 'invert' : ''}`}
+          />
+        </Link>
         <div className={`flex items-center gap-8 text-2xl ${isOverWhiteSection ? 'text-black' : 'text-white'}`}>
           {data.navigation.links.map((link) => (
             <a
