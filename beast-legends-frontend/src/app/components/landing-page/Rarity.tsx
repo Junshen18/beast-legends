@@ -64,7 +64,7 @@ export default function Rarity() {
 
             {/* Table Caption */}
             <div className="mt-4 text-white/80 text-lg">
-              From Common to Mythic—discover the traits that define your Kaizer.{" "}
+              From Common to Mythic—discover the traits that define your Beasts.{" "}
               <a
                 href="#"
                 className="text-blue-400 hover:text-blue-300 inline-flex items-center"

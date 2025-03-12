@@ -25,7 +25,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-center items-center gap-8 relative">
         <div>
           <Image
-            src="/landing-page/footer-title.png"
+            src="/landing-page/title.svg"
             alt="Logo"
             width={1100}
             height={200}

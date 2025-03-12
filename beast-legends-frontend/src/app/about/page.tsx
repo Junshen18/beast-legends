@@ -39,18 +39,18 @@ export default function AboutPage() {
             Who Are We?
           </h1>
           <p className="text-white mb-12 font-inter text-justify">
-            We are Mystic Kaizer, a collective of builders, storytellers, and
+            We are Beast Legends, a collective of builders, storytellers, and
             visionaries dedicated to pushing the boundaries between art,
             technology, and community. Our mission is to create an immersive NFT
             experience where myth meets the metaverse—empowering holders to
             shape a living, evolving world on the Solana blockchain.
             <br />
             <br />
-            At the heart of Mystic Kaizer is a belief that digital ownership
+            At the heart of Beast Legends is a belief that digital ownership
             should be more than just a collectible—it should be an adventure. We
             fuse compelling lore, dynamic NFT evolution, and real-world impact,
-            giving our community not only unique Kaizers but also the power to
-            influence the project's future through The Kaizer Council (DAO).
+            giving our community not only unique Beasts but also the power to
+            influence the project's future through The Beast Council (DAO).
             <br />
             <br />
             We're not just building an NFT collection—we're creating a universe

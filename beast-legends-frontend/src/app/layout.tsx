@@ -17,8 +17,8 @@ const darkMystic = localFont({
 
 
 export const metadata: Metadata = {
-  title: "Mystic Kaizer",
-  description: "Mystic Kaizer",
+  title: "Beast Legends",
+  description: "Beast Legends",
 };
 
 export default function RootLayout({

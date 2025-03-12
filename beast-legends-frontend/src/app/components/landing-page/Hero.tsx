@@ -6,8 +6,8 @@ export default function Hero() {
     <section className="min-h-screen bg-[url('/landing-page/mk-hero-bg.png')] bg-cover bg-center flex items-end pb-16 relative">
       <div className="px-28 w-full h-1/2 flex flex-col items-center justify-center">
         <Image
-          src="/landing-page/name.svg"
-          alt="Mystic Kaizer Logo"
+          src="/white-title.svg"
+          alt="Beast Legends Logo"
           width={980}
           height={168}
         />

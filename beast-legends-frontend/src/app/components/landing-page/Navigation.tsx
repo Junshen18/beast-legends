@@ -42,8 +42,8 @@ export default function Navigation() {
       <div className="mx-auto px-12 h-18 flex items-center justify-between">
         <Link href="/">
           <Image
-            src="/landing-page/name.svg"
-            alt="Mystic Kaizer Logo"
+            src="/white-title.svg"
+            alt="Beast Legends Logo"
             width={190}
             height={168}
             className={`${isOverWhiteSection ? 'invert' : ''}`}

@@ -13,7 +13,8 @@ const GridMotion: FC<GridMotionProps> = ({
 }) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const mouseXRef = useRef<number>(window.innerWidth / 2);
+  // Initialize with null to avoid SSR issues
+  const mouseXRef = useRef<number | null>(null);
 
   // Ensure the grid has 28 items (4 rows x 7 columns) by default
   const totalItems = 28;
@@ -25,6 +26,9 @@ const GridMotion: FC<GridMotionProps> = ({
     items.length > 0 ? items.slice(0, totalItems) : defaultItems;
 
   useEffect(() => {
+    // Initialize mouseXRef here instead of at declaration
+    mouseXRef.current = window.innerWidth / 2;
+    
     gsap.ticker.lagSmoothing(0);
 
     const handleMouseMove = (e: MouseEvent): void => {
@@ -37,7 +41,7 @@ const GridMotion: FC<GridMotionProps> = ({
       const inertiaFactors = [0.6, 0.4, 0.3, 0.2]; // Different inertia for each row, outer rows slower
 
       rowRefs.current.forEach((row, index) => {
-        if (row) {
+        if (row && mouseXRef.current !== null) {
           const direction = index % 2 === 0 ? 1 : -1;
           const moveAmount =
             ((mouseXRef.current / window.innerWidth) * maxMoveAmount -
@@ -80,7 +84,9 @@ const GridMotion: FC<GridMotionProps> = ({
               key={rowIndex}
               className="grid gap-4 grid-cols-7"
               style={{ willChange: "transform, filter" }}
-              ref={(el) => (rowRefs.current[rowIndex] = el)}
+              ref={(el) => {
+                rowRefs.current[rowIndex] = el;
+              }}
             >
               {Array.from({ length: 7 }, (_, itemIndex) => {
                 const content = combinedItems[rowIndex * 7 + itemIndex];

@@ -8,7 +8,7 @@ export default function Roadmap() {
       <div className="max-w-7xl mx-auto flex flex-col gap-6 justify-center items-center relative">
         <div className="absolute top-0">
           <Image
-            src="/landing-page/footer-title.png"
+            src="/landing-page/title.svg"
             alt="title"
             width={700}
             height={133}

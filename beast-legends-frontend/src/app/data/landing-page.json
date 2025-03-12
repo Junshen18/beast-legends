@@ -11,20 +11,20 @@
     "subtitle": "Beasts of the Celestial Realm"
   },
   "about": {
-    "title": "Dive Into the Mystic Kaizer Universe",
+    "title": "Dive Into the Beast Legends Universe",
     "content": [
-      "In a time not far from now, the world stands on the edge of chaos. Human greed and technological overreach have disrupted the Elemental Veil—a hidden force that binds reality together. As the Veil weakens, ancient powers once thought to be myths begin to awaken… and so do The Kaizers.",
-      "The Kaizers are mystical beings forged from the core elements of existence—Fire, Water, Earth, and Air—each representing a fragment of reality's balance. Long ago, they guarded the Veil in secret, ensuring harmony between the physical and spiritual realms. But with the rise of corporate empires exploiting nature and data, the Veil is now tearing apart, releasing anomalies—glitches in reality that threaten both worlds.",
-      "In this new age, the Mystic Kaizer NFTs represent more than collectibles—they are the key to restoring balance. Each NFT is a unique Kaizer, shaped by elemental forces and random anomalies, reflecting the unpredictability of both nature and technology. By minting a Kaizer, holders become Guardians—protectors of the Veil—and their actions in both the digital and physical realms determine the future."
+      "In a time not far from now, the world stands on the edge of chaos. Human greed and technological overreach have disrupted the Elemental Veil—a hidden force that binds reality together. As the Veil weakens, ancient powers once thought to be myths begin to awaken… and so do The Beasts.",
+      "The Beasts are mystical beings forged from the core elements of existence—Fire, Water, Earth, and Air—each representing a fragment of reality's balance. Long ago, they guarded the Veil in secret, ensuring harmony between the physical and spiritual realms. But with the rise of corporate empires exploiting nature and data, the Veil is now tearing apart, releasing anomalies—glitches in reality that threaten both worlds.",
+      "In this new age, the Beast Legends  NFTs represent more than collectibles—they are the key to restoring balance. Each NFT is a unique Beast, shaped by elemental forces and random anomalies, reflecting the unpredictability of both nature and technology. By minting a Beast, holders become Guardians—protectors of the Veil—and their actions in both the digital and physical realms determine the future."
     ],
-    "signature": "Mystic Kaiser"
+    "signature": "Beast Legends"
   },
   "story": {
-    "title": "Story Of The Kaizers",
+    "title": "Story Of The Beasts",
     "episodes": 5
   },
   "collections": {
-    "title": "The Kaizer Collections"
+    "title": "The Beast Collections"
   },
   "rarity": {
     "title": "NFT Rarity Breakdown",
@@ -32,32 +32,22 @@
       {
         "tier": "Common",
         "traits": "Species",
-        "rate": "40%"
+        "rate": "60%"
       },
       {
-        "tier": "Uncommon",
+        "tier": "Rare",
         "traits": "Species + Element",
         "rate": "30%"
       },
       {
-        "tier": "Rare",
-        "traits": "Species + Element + Form",
-        "rate": "20%"
-      },
-      {
         "tier": "Epic",
-        "traits": "Species + Element + Form + 1 Anomaly",
-        "rate": "8%"
-      },
-      {
-        "tier": "Legendary",
-        "traits": "Species + Element + Form + 2 Anomaly",
-        "rate": "1%"
+        "traits": "Species + Element + 1 Anomaly",
+        "rate": "8.5%"
       },
       {
         "tier": "Mythic",
-        "traits": "Species + Element + Form + 3 Anomaly",
-        "rate": "0.5%"
+        "traits": "Species + Element + 2 Anomalies",
+        "rate": "1.5%"
       }
     ]
   },
@@ -76,23 +66,23 @@
     "phases": [
       {
         "number": 1,
-        "title": "Awakening the Kaizers",
+        "title": "Awakening the Beasts",
         "status": "current",
         "items": [
           {
-            "text": "Project Reveal – Introduce the Mystic Kaizer universe and its rarity system",
+            "text": "Project Reveal - Introduce the Beast Legends universe and its rarity system",
             "status": "completed"
           },
           {
-            "text": "Website Launch – Release an interactive landing page with lore and minting details",
+            "text": "Website Launch - Release an interactive landing page with lore and minting details",
             "status": "completed"
           },
           {
-            "text": "NFT Minting Event – Open the Mystic Kaizer Genesis mint (limited supply)",
+            "text": "NFT Minting Event - Open the Beast Legends Genesis mint (limited supply)",
             "status": "in-progress"
           },
           {
-            "text": "Kaizer Explorer – Launch a rarity explorer for holders",
+            "text": "Beast Explorer - Launch a rarity explorer for holders",
             "status": "pending"
           }
         ]
@@ -103,15 +93,15 @@
         "status": "locked",
         "items": [
           {
-            "text": "Anomaly Reveal Event – Epic+ Kaizers unlock exclusive traits",
+            "text": "Anomaly Reveal Event - Epic+ Beasts unlock exclusive traits",
             "status": "locked"
           },
           {
-            "text": "Evolution Mechanism – NFT upgrades through quests or burn mechanics",
+            "text": "Evolution Mechanism - NFT upgrades through quests or burn mechanics",
             "status": "locked"
           },
           {
-            "text": "Kaizer Council (DAO) – Legendary/Mythic holders vote on future initiatives",
+            "text": "Beast Council (DAO) - Legendary/Mythic holders vote on future initiatives",
             "status": "locked"
           }
         ]
@@ -122,15 +112,15 @@
         "status": "locked",
         "items": [
           {
-            "text": "Realm Unlocks – Interactive lore-based quest with new NFT classes",
+            "text": "Realm Unlocks - Interactive lore-based quest with new NFT classes",
             "status": "locked"
           },
           {
-            "text": "Airdrop & Rewards – Mystic artifacts for holders",
+            "text": "Airdrop & Rewards - Mystic artifacts for holders",
             "status": "locked"
           },
           {
-            "text": "Hidden Kaizers – Secret 1/1 NFTs hidden within the realms",
+            "text": "Hidden Beasts - Secret 1/1 NFTs hidden within the realms",
             "status": "locked"
           }
         ]
@@ -141,21 +131,21 @@
         "status": "locked",
         "items": [
           {
-            "text": "IRL Utility – Exclusive merchandise and event passes",
+            "text": "IRL Utility - Exclusive merchandise and event passes",
             "status": "locked"
           },
           {
-            "text": "Mystic Kaizer Mini-Games – Interactive PvE quests",
+            "text": "Beast Legends Mini-Games - Interactive PvE quests",
             "status": "locked"
           },
           {
-            "text": "Multichain Expansion – Integration with other chains/metaverse",
+            "text": "Multichain Expansion - Integration with other chains/metaverse",
             "status": "locked"
           }
         ]
       }
     ],
-    "quote": "The journey is just beginning—will you shape the fate of the Mystic Kaizers?"
+    "quote": "The journey is just beginning—will you shape the fate of the Beast Legends?"
   },
   "footer": {
     "links": [
@@ -174,6 +164,6 @@
         { "type": "youtube", "href": "#" }
       ]
     },
-    "copyright": "© 2025 Mystic Kaizer. All rights reserved."
+    "copyright": "© 2025 Beast Legends. All rights reserved."
   }
 } 
