@@ -1,7 +1,7 @@
 {
   "navigation": {
     "links": [
-      { "label": "About", "href": "#" },
+      { "label": "About", "href": "about" },
       { "label": "Story", "href": "#" },
       { "label": "More", "href": "#" },
       { "label": "Marketplace", "href": "marketplace" }
