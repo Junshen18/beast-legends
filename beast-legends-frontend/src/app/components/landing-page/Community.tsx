@@ -4,7 +4,7 @@ import data from "../../data/landing-page.json";
 
 export default function Community() {
   return (
-    <section className="bg-[url('/landing-page/community.png')] bg-cover bg-center pt-20 px-6">
+    <section className="bg-[url('/landing-page/community.png')] bg-cover bg-center pt-20 px-6" id="community">
       <div className="mx-auto flex flex-col gap-6 justify-center items-center relative">
         <Reveal width="100%">
           <div className="text-6xl text-white w-full text-center mt-16">

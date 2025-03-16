@@ -4,7 +4,7 @@ import data from "../../data/landing-page.json";
 
 export default function Rarity() {
   return (
-    <section className="bg-[#0E0E0C]">
+    <section className="bg-[#0E0E0C]" id="rarity">
       <div className="flex flex-row max-w-[1920px] mx-auto">
         <div className="relative w-[550px] flex-shrink-0">
           <Image

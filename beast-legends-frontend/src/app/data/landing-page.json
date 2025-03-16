@@ -149,12 +149,12 @@
   },
   "footer": {
     "links": [
-      { "label": "About Us", "href": "#" },
-      { "label": "Our Story", "href": "#" },
-      { "label": "NFT Allocation", "href": "#" },
-      { "label": "Roadmap", "href": "#" },
-      { "label": "Technologies", "href": "#" },
-      { "label": "Communities", "href": "#" }
+      { "label": "About Us", "href": "about" },
+      { "label": "Our Story", "href": "story" },
+      { "label": "NFT Allocation", "href": "#rarity" },
+      { "label": "Roadmap", "href": "#roadmap" },
+      { "label": "Technologies", "href": "technologies" },
+      { "label": "Communities", "href": "#community" }
     ],
     "socials": {
       "title": "Our Socials",

@@ -4,7 +4,7 @@ import data from "../../data/landing-page.json";
 
 export default function Roadmap() {
   return (
-    <section className="bg-white py-20 px-6">
+    <section className="bg-white py-20 px-6" id="roadmap">
       <div className="max-w-7xl mx-auto flex flex-col gap-6 justify-center items-center relative">
         <div className="absolute top-0">
           <Image

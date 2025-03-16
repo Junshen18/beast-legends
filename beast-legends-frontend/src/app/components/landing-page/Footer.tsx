@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import data from "../../data/landing-page.json";
 import {
@@ -5,8 +6,10 @@ import {
   AiFillTwitterCircle,
   AiFillYoutube,
 } from "react-icons/ai";
+import { useRouter } from "next/navigation";
 
 export default function Footer() {
+  const router = useRouter();
   const SocialIcon = ({ type }: { type: string }) => {
     switch (type) {
       case "instagram":
@@ -43,6 +46,9 @@ export default function Footer() {
                 <div
                   key={link.label}
                   className="text-2xl hover:text-black cursor-pointer"
+                  onClick={() => {
+                    router.push(link.href);
+                  }}
                 >
                   {link.label}
                 </div>
