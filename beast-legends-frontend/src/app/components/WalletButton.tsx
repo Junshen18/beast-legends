@@ -1,6 +1,7 @@
 "use client";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { useRouter } from "next/navigation";
 
 interface WalletButtonProps {
   isOverWhiteSection?: boolean;
@@ -8,7 +9,7 @@ interface WalletButtonProps {
 
 export default function WalletButton({ isOverWhiteSection }: WalletButtonProps) {
   const { publicKey, disconnect } = useWallet();
-
+  const router = useRouter();
   if (!publicKey) {
     return (
       <div className={`px-4 py-0 cursor-pointer text-2xl w-[190px] group transition-colors duration-300 rounded-md flex items-center justify-center hover:backdrop-blur-md ${isOverWhiteSection ? 'hover:bg-black/20' : 'hover:bg-white'}`}>
@@ -51,11 +52,12 @@ export default function WalletButton({ isOverWhiteSection }: WalletButtonProps) 
           isOverWhiteSection ? 'bg-white/30' : 'bg-black/30'
         }`}>
           <div
+            onClick={() => router.push('/profile')}
             className={`w-full text-left px-4 py-2 hover:bg-black/20 transition-colors cursor-pointer ${
               isOverWhiteSection ? 'text-black hover:text-white' : 'text-white'
             }`}
           >
-            Profile
+            My Collection
           </div>
           <div
             onClick={disconnect}

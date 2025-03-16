@@ -3,7 +3,7 @@ import localFont from 'next/font/local'
 import { Inter } from "next/font/google";
 
 import "./globals.css";
-import AppWalletProvider from "./components/AppWalletProvider";
+import ClientWalletProvider from "./components/WalletProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,9 +31,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${darkMystic.variable} antialiased font-sans`}
       >
-        <AppWalletProvider>
+        <ClientWalletProvider>
           {children}
-        </AppWalletProvider>
+        </ClientWalletProvider>
       </body>
     </html>
   );

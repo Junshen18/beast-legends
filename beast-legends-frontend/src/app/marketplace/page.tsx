@@ -15,7 +15,7 @@ export default function MarketplacePage() {
   return (
     <main className="min-h-screen bg-black">
       <Navigation />
-      <div className="pt-32 px-12 pb-24">
+      <div className="pt-24 px-12 pb-24">
         <h1 className="text-5xl font-bold text-white mb-12 font-dark-mystic">Marketplace</h1>
         <div className="flex gap-8">
           <FilterSection filters={filters} setFilters={setFilters} />
