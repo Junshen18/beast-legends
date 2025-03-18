@@ -39,7 +39,7 @@ export default function Navigation() {
 
   return (
     <nav className="fixed w-full bg-transparent z-50 font-dark-mystic">
-      <div className="mx-auto px-12 h-18 flex items-center justify-between">
+      <div className="mx-auto px-12 h-20 flex items-center justify-between">
         <Link href="/">
           <Image
             src="/white-title.svg"
