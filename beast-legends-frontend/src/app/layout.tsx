@@ -8,11 +8,13 @@ import ClientWalletProvider from "./components/WalletProvider";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
 });
 
 const darkMystic = localFont({
   src: './fonts/darkmystic.otf',
   variable: '--font-dark-mystic',
+  display: 'swap',
 })
 
 
