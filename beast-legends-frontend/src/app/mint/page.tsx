@@ -7,6 +7,8 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { Metaplex, walletAdapterIdentity } from '@metaplex-foundation/js';
 import axios from 'axios';
 import Image from 'next/image';
+import Navigation from '../components/landing-page/Navigation';
+import { TypeAnimation } from 'react-type-animation';
 
 interface PinataResponse {
   imageUri: string;
@@ -118,14 +120,43 @@ export default function SimpleMintPage() {
   };
   
   return (
-    <div className="max-w-6xl mx-auto p-8 font-sans text-white">
-      <h1 className="text-4xl font-bold text-center mb-8">Simple NFT Minter</h1>
+    <div className="min-h-screen flex flex-col bg-[#1A1A1A]">
+      <Navigation />
+      <div className="pt-24 mx-auto px-12 font-sans text-white">
+        <h1 className="text-4xl font-bold text-center mb-8 font-dark-mystic">Mint Your Beast</h1>
+        <div className={`flex justify-center transition-all duration-300 rounded-lg relative ${
+            minting || !publicKey 
+              ? 'cursor-not-allowed opacity-50' 
+              : 'group hover:scale-105 cursor-pointer shadow-2xl shadow-white/50'
+          }`}
+          onClick={minting || !publicKey ? undefined : mintNFT}
+          >
+            <Image src="/mint/back-card.png" alt="Mint Your Beast" width={400} height={700} className="rounded-lg group-hover:brightness-50"/>
+            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                <h1 className="hidden group-hover:block text-6xl font-bold text-center mb-8 font-dark-mystic">{minting ? 'Creating Your NFT...' : 'Mint'}</h1>
+            </div>
+        </div>
+        <div>{minting && (
+          <div className="mt-8 text-center">
+            <TypeAnimation
+            sequence={[
+                'Getting image...',
+                1000,
+                'Uploading to IPFS...',
+                1000,
+                'Creating blockchain transaction...',
+                1000,
+                'Minting...',
+                1000
+              ]}
+              wrapper="span"
+              speed={50}
+              className="text-6xl font-bold text-center mb-8 font-dark-mystic"
+            />
+          </div>
+        )}</div>
       
-      <div className="flex justify-center mb-8">
-        <WalletMultiButton />
-      </div>
-      
-      <div className="flex flex-col items-center mb-12">
+      {/* <div className="flex flex-col items-center mb-12">
         <button 
           className={`px-8 py-4 rounded-lg text-xl font-bold transition-colors ${
             minting || !publicKey 
@@ -145,7 +176,7 @@ export default function SimpleMintPage() {
             <p className="opacity-80 animate-pulse delay-200">Creating blockchain transaction...</p>
           </div>
         )}
-      </div>
+      </div> */}
       
       {mintedNFT && (
         <div className="mt-8 flex flex-col items-center ">
@@ -187,6 +218,7 @@ export default function SimpleMintPage() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }
