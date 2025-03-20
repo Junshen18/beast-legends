@@ -175,27 +175,7 @@ export default function SimpleMintPage() {
             </div>
           )}
         </div>
-        {/* <div className="flex flex-col items-center mb-12">
-        <button 
-          className={`px-8 py-4 rounded-lg text-xl font-bold transition-colors ${
-            minting || !publicKey 
-              ? 'bg-gray-400 cursor-not-allowed' 
-              : 'bg-purple-600 hover:bg-purple-700 text-white cursor-pointer'
-          }`}
-          onClick={mintNFT} 
-          disabled={minting || !publicKey}
-        >
-          {minting ? 'Creating Your NFT...' : 'Mint Simple NFT'}
-        </button>
-        
-        {minting && (
-          <div className="mt-8 text-center">
-            <p className="opacity-80 animate-pulse">Getting image...</p>
-            <p className="opacity-80 animate-pulse delay-100">Uploading to IPFS...</p>
-            <p className="opacity-80 animate-pulse delay-200">Creating blockchain transaction...</p>
-          </div>
-        )}
-      </div> */}
+
 
         {mintedNFT && (
           <div className="mt-8 flex flex-col items-center ">

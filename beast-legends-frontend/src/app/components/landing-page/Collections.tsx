@@ -26,6 +26,27 @@ export default function Collections() {
             height={10}
           />
         </div>
+        <div className="flex flex-row items-center">
+          <Image
+            src="/marketplace/mythic-2.png"
+            alt="mythic-2"
+            width={500}
+            height={500}
+          />
+          <Image
+            src="/marketplace/rare-2.png"
+            alt="mythic-2"
+            width={500}
+            height={500}
+          />
+          <Image
+            src="/marketplace/common-2.png"
+            alt="common"
+            width={500}
+            height={500}
+          />
+          
+        </div>
       </div>
     </section>
   );

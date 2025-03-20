@@ -36,7 +36,7 @@ export default function WalletButton({ isOverWhiteSection }: WalletButtonProps) 
   return (
     <div className="relative group">
       {/* Main button wrapper with padding to create hoverable area */}
-      <div className="pb-3">
+      <div className="py-3">
         <div
           className={`pointer-events-auto cursor-pointer px-4 py-2 z-[100] text-2xl w-[190px] group-hover:backdrop-blur-md flex items-center justify-center rounded-md ${
             isOverWhiteSection ? 'text-black group-hover:bg-black/10' : 'text-white group-hover:bg-black/20'
@@ -45,7 +45,6 @@ export default function WalletButton({ isOverWhiteSection }: WalletButtonProps) 
           {publicKey.toString().slice(0, 6)}...{publicKey.toString().slice(-5)}
         </div>
       </div>
-      
       {/* Dropdown Menu - positioned to remove gap */}
       <div className="absolute mt-2 right-0 top-[calc(100%-12px)] w-[190px] backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
         <div className={` rounded-md overflow-hidden ${
