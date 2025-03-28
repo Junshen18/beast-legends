@@ -45,21 +45,21 @@ export default function Dapp() {
       id: "story",
       title: "Story Mode",
       subtitle: "CHAPTER I: ORIGINS",
-      image: "/dapp/story-mode.png",
+      image: "/dapp/story/story-bg1.png",
       color: "bg-amber-700"
     },
     {
       id: "battle",
       title: "Battle",
       subtitle: "PVP Arena",
-      image: "/dapp/battle-mode.png",
+      image: "/dapp/battle/battle-field.png",
       color: "bg-blue-700"
     },
     {
       id: "quest",
       title: "Quests",
       subtitle: "DAILY MISSIONS",
-      image: "/dapp/quest-mode.png",
+      image: "/dapp/quest/quest-bg.png",
       color: "bg-purple-700"
     }
   ];
@@ -174,7 +174,7 @@ export default function Dapp() {
           </div>
           
           {/* Navigation Menu */}
-          <div className="flex flex-col gap-2 mt-6">
+          <div className="flex flex-col gap-2 mt-6 font-dark-mystic">
             <button 
               className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${selectedTab === 'home' ? 'bg-purple-800' : 'hover:bg-gray-800'}`}
               onClick={() => setSelectedTab('home')}
@@ -219,7 +219,7 @@ export default function Dapp() {
         {/* Main Content Area */}
         <div className="flex-1 ml-6">
           {/* Top Beast Display */}
-          <div className="flex gap-6 mb-6">
+          {/* <div className="flex gap-6 mb-6">
             {userBeasts.map(beast => (
               <div key={beast.id} className="bg-black/40 backdrop-blur-sm rounded-xl p-4 flex flex-col items-center w-64">
                 <div className="relative">
@@ -254,17 +254,17 @@ export default function Dapp() {
                   View Details
                 </button>
               </div>
-            ))}
+            ))} */}
             
             {/* Add Beast Card */}
-            <div className="bg-black/20 backdrop-blur-sm rounded-xl p-4 flex flex-col items-center justify-center w-64 border-2 border-dashed border-gray-600 cursor-pointer hover:bg-black/30 transition-colors">
+            {/* <div className="bg-black/20 backdrop-blur-sm rounded-xl p-4 flex flex-col items-center justify-center w-64 border-2 border-dashed border-gray-600 cursor-pointer hover:bg-black/30 transition-colors">
               <div className="text-5xl mb-2">+</div>
               <p className="text-gray-300">Add Beast</p>
               <Link href="/mint" className="mt-4 text-sm text-blue-400 hover:text-blue-300">
                 Mint a new Beast
               </Link>
             </div>
-          </div>
+          </div> */}
           
           {/* Activity Section */}
           <h2 className="text-3xl font-bold mb-4 font-dark-mystic">Activities</h2>
@@ -272,16 +272,21 @@ export default function Dapp() {
             {activities.map(activity => (
               <div 
                 key={activity.id} 
-                className={`${activity.color} rounded-xl overflow-hidden cursor-pointer hover:scale-105 transition-transform`}
+                onClick={() => {
+                  if (activity.id === "battle") {
+                    router.push(`/dapp/${activity.id}`);
+                  }
+                }}
+                className={`${activity.color} rounded-xl overflow-hidden cursor-pointer group`}
               >
-                <div className="relative h-40">
+                <div className="relative h-80 overflow-hidden">
                   <Image 
                     src={activity.image || "/dapp/placeholder.png"} 
                     alt={activity.title} 
                     fill
-                    className="object-cover"
+                    className="object-cover object-center transition-transform duration-300 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-4">
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-4 h-1/2">
                     <h3 className="text-2xl font-bold font-dark-mystic">{activity.title}</h3>
                     <p className="text-sm text-gray-300">{activity.subtitle}</p>
                   </div>
