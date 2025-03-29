@@ -2,10 +2,10 @@
   "navigation": {
     "links": [
       { "label": "About", "href": "about" },
-      { "label": "Story", "href": "#" },
+      { "label": "Communities", "href": "communities" },
       { "label": "Launch App", "href": "dapp" },
       { "label": "Marketplace", "href": "marketplace" },
-      { "label": "More", "href": "#" }
+      { "label": "Mint", "href": "mint" }
 
     ]
   },

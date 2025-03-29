@@ -34,8 +34,8 @@ export default function FilterSection({ filters, setFilters }: FilterSectionProp
           <h3 className="text-white text-xl mb-4">Price Range</h3>
           <Slider
             min={0}
-            max={10}
-            step={0.1}
+            max={5}
+            step={0.05}
             value={[filters.priceRange.min, filters.priceRange.max]}
             onValueChange={(value) =>
               setFilters({

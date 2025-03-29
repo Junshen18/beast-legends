@@ -56,6 +56,9 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Define a consistent width for all navigation items
+  const navItemClass = "w-40 text-center flex justify-center items-center";
+
   return (
     <nav className="fixed w-full bg-transparent z-50 font-dark-mystic">
       <div className="mx-auto px-12 h-24 flex items-center justify-between">
@@ -125,61 +128,61 @@ export default function Navigation() {
                 </div>
               );
             }
-            else if (link.label === "More") {
-              return (
-                <div key={link.label} className="relative group">
-                  {/* Main button wrapper with padding to create hoverable area */}
-                  <div className="py-3">
-                    <div
-                      className={`pointer-events-auto cursor-pointer px-4 py-2 z-[100] flex items-center justify-center rounded-md ${
-                        isOverWhiteSection
-                          ? "text-black group-hover:bg-black/10 group-hover:backdrop-blur-md"
-                          : "text-white group-hover:bg-black/20 group-hover:backdrop-blur-md"
-                      }`}
-                    >
-                      {link.label}
-                    </div>
-                  </div>
+            // else if (link.label === "More") {
+            //   return (
+            //     <div key={link.label} className={`relative group ${navItemClass}`}>
+            //       {/* Main button wrapper with padding to create hoverable area */}
+            //       <div className="py-3 w-full">
+            //         <div
+            //           className={`pointer-events-auto cursor-pointer px-4 py-2 z-[100] flex items-center justify-center rounded-md w-full ${
+            //             isOverWhiteSection
+            //               ? "text-black group-hover:bg-black/10 group-hover:backdrop-blur-md"
+            //               : "text-white group-hover:bg-black/20 group-hover:backdrop-blur-md"
+            //           }`}
+            //         >
+            //           {link.label}
+            //         </div>
+            //       </div>
 
-                  {/* Dropdown Menu - positioned to remove gap */}
-                  <div className="text-base absolute mt-2 right-0 top-[calc(100%-12px)] w-[190px] backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
-                    <div
-                      className={`rounded-md overflow-hidden ${
-                        isOverWhiteSection ? "bg-white/30" : "bg-black/30"
-                      }`}
-                    >
-                      <Link
-                        href="/communities"
-                        className={`block w-full text-left px-4 py-2 hover:bg-black/20 transition-colors cursor-pointer ${
-                          isOverWhiteSection
-                            ? "text-black hover:text-white"
-                            : "text-white"
-                        }`}
-                      >
-                        Communities
-                      </Link>
-                      <Link
-                        href="/leaderboard"
-                        className={`block w-full text-left px-4 py-2 hover:bg-black/20 transition-colors cursor-pointer ${
-                          isOverWhiteSection
-                            ? "text-black hover:text-white"
-                            : "text-white"
-                        }`}
-                      >
-                        Leaderboard
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              );
-            }
+            //       {/* Dropdown Menu - positioned to remove gap */}
+            //       <div className="text-base absolute mt-2 right-0 top-[calc(100%-12px)] w-[190px] backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
+            //         <div
+            //           className={`rounded-md overflow-hidden ${
+            //             isOverWhiteSection ? "bg-white/30" : "bg-black/30"
+            //           }`}
+            //         >
+            //           <Link
+            //             href="/communities"
+            //             className={`block w-full text-left px-4 py-2 hover:bg-black/20 transition-colors cursor-pointer ${
+            //               isOverWhiteSection
+            //                 ? "text-black hover:text-white"
+            //                 : "text-white"
+            //             }`}
+            //           >
+            //             Communities
+            //           </Link>
+            //           <Link
+            //             href="/leaderboard"
+            //             className={`block w-full text-left px-4 py-2 hover:bg-black/20 transition-colors cursor-pointer ${
+            //               isOverWhiteSection
+            //                 ? "text-black hover:text-white"
+            //                 : "text-white"
+            //             }`}
+            //           >
+            //             Leaderboard
+            //           </Link>
+            //         </div>
+            //       </div>
+            //     </div>
+            //   );
+            // }
 
             // Regular navigation links
             return (
-              <div key={link.label} className="group">
+              <div key={link.label} className={`group ${navItemClass}`}>
                 <a
                   href={link.href}
-                  className={`pointer-events-auto cursor-pointer px-4 py-2 z-[100] flex items-center justify-center rounded-md ${
+                  className={`pointer-events-auto cursor-pointer px-4 py-2 z-[100] flex items-center justify-center rounded-md w-full ${
                     isOverWhiteSection
                       ? "text-black group-hover:bg-black/10 group-hover:backdrop-blur-md"
                       : "text-white group-hover:bg-black/20 group-hover:backdrop-blur-md"

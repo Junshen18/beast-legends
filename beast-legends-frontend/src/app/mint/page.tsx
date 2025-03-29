@@ -153,6 +153,14 @@ export default function SimpleMintPage() {
             </h1>
           </div>
         </div>
+
+        {!publicKey && (
+            <div className="mt-8 text-center">
+              <h1 className="text-2xl font-bold text-center mb-8 font-dark-mystic">
+                Please connect your wallet to mint
+              </h1>
+            </div>
+          ) }
         
         <div>
           {minting && (
@@ -176,6 +184,7 @@ export default function SimpleMintPage() {
           )}
         </div>
 
+          
 
         {mintedNFT && (
           <div className="mt-8 flex flex-col items-center ">

@@ -6,7 +6,7 @@ import FilterSection from "../components/marketplace/FilterSection";
 
 export default function MarketplacePage() {
   const [filters, setFilters] = useState({
-    priceRange: { min: 0, max: 10 },
+    priceRange: { min: 0, max: 5 },
     rarity: [] as string[],
     attributes: {} as Record<string, string[]>,
     sortBy: "price_low_to_high",
