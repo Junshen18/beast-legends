@@ -35,12 +35,12 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-black">
       <Navigation />
-      <div className="flex flex-row h-screen ">
-        <div className="flex flex-col justify-center items-start w-full px-12">
-          <h1 className="text-5xl font-bold text-white mb-12 font-dark-mystic">
+      <div className="flex flex-col md:flex-row h-screen px-5 md:px-0 py-24 md:py-0">
+        <div className="flex flex-col justify-center items-center md:items-start w-full md:px-12">
+          <h1 className="text-5xl font-bold text-white mb-5 md:mb-12 font-dark-mystic">
             Who Are We?
           </h1>
-          <p className="text-white mb-12 font-inter text-justify">
+          <p className="text-white mb-5 md:mb-12 font-inter text-justify text-sm md:text-base">
             We are Beast Legends, a collective of builders, storytellers, and
             visionaries dedicated to pushing the boundaries between art,
             technology, and community. Our mission is to create an immersive NFT
@@ -59,7 +59,24 @@ export default function AboutPage() {
             where every holder becomes a Guardian of the Elemental Veil.
           </p>
         </div>
-        <div className="flex flex-col w-1/2">
+        <div className="grid grid-cols-3 gap-1.5 md:hidden w-full">
+          <Image src="/creatures/creature1.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature2.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature3.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature4.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature5.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature6.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature7.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature8.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature9.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature10.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature11.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature12.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature13.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature14.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+          <Image src="/creatures/creature15.jpg" alt="creature" width={1000} height={1000} className="object-cover w-full h-full rounded-3xl aspect-square" />
+        </div>
+        <div className="hidden md:flex flex-col w-1/2 ">
           <GridMotion items={items} />
         </div>
       </div>
