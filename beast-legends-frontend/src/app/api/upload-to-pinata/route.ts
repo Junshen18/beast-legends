@@ -6,16 +6,14 @@ export async function POST(request: Request) {
   try {
     const { image, metadata } = await request.json();
     
-    // Convert base64 image to buffer
-    const imageBuffer = Buffer.from(
-      image.replace(/^data:image\/\w+;base64,/, ''),
-      'base64'
-    );
+    // The image is already in base64 format with data URL prefix
+    const base64Data = image.split(',')[1];
+    const imageBuffer = Buffer.from(base64Data, 'base64');
     
     // Upload image to Pinata
     const imageFormData = new FormData();
     imageFormData.append('file', imageBuffer, {
-      filename: 'beast-legend-nft-test.png',
+      filename: 'beast-legend-nft.png',
       contentType: 'image/png',
     });
     
@@ -34,23 +32,13 @@ export async function POST(request: Request) {
     const imageIpfsHash = imageResponse.data.IpfsHash;
     const imageUri = `ipfs://${imageIpfsHash}`;
     
-    // Create simplified metadata with fixed traits
-    const simplifiedMetadata = {
-      name: "Beast Legend NFT",
-      description: "A legendary beast from the Beast Legends collection",
-      symbol: "BEAST",
-      image: imageUri,
-      attributes: [
-        { trait_type: "Type", value: "Dragon" },
-        { trait_type: "Element", value: "Earth" },
-        { trait_type: "Anomaly", value: "Wings, Armored" },
-        { trait_type: "Rarity", value: "Mythic" }
-      ]
-    };
-    
+    // Use the metadata from the request
     const metadataResponse = await axios.post(
       'https://api.pinata.cloud/pinning/pinJSONToIPFS',
-      simplifiedMetadata,
+      {
+        ...metadata,
+        image: imageUri,
+      },
       {
         headers: {
           'Content-Type': 'application/json',

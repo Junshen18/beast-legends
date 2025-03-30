@@ -39,6 +39,21 @@ export default {
           foreground: 'var(--destructive-foreground)',
         },
       },
+      keyframes: {
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '25%': { transform: 'translateX(-8px)' },
+          '75%': { transform: 'translateX(8px)' },
+        },
+        attack: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-20px)' },
+        }
+      },
+      animation: {
+        'shake': 'shake 0.5s ease-in-out',
+        'attack': 'attack 0.5s ease-in-out',
+      }
     },
   },
   plugins: [],

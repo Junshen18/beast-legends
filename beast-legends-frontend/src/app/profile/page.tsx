@@ -9,6 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Navigation from "../components/landing-page/Navigation";
 import { motion, useScroll, useTransform } from "framer-motion";
+import NFTModal from "../components/NFTModal";
 
 interface NFTData {
   address: string;
@@ -28,6 +29,8 @@ export default function ProfilePage() {
   const [connection, setConnection] = useState<Connection | null>(null);
   const [metaplex, setMetaplex] = useState<any>(null);
   const [mounted, setMounted] = useState(false);
+  const [selectedNFT, setSelectedNFT] = useState<NFTData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   
   // Refs for scroll effect
   const collectionRef = useRef<HTMLDivElement>(null);
@@ -266,7 +269,11 @@ export default function ProfilePage() {
                 {nfts.map((nft) => (
                   <div
                     key={nft.address}
-                    className="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-white"
+                    className="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-white cursor-pointer hover:scale-105 transition-transform duration-200"
+                    onClick={() => {
+                      setSelectedNFT(nft);
+                      setIsModalOpen(true);
+                    }}
                   >
                     <Image
                       src={nft.image}
@@ -275,13 +282,11 @@ export default function ProfilePage() {
                       height={400}
                       className="w-full h-fill object-cover"
                       onError={(e) => {
-                        // Fallback if image fails to load
                         (e.target as HTMLImageElement).src = "/placeholder.png";
                       }}
                     />
                     <div className="p-6">
                       <h3 className="text-xl font-semibold mb-2">{nft.name}</h3>
-
                       <div className="mb-4">
                         {nft.attributes.map((attr, index) => (
                           <div
@@ -295,7 +300,6 @@ export default function ProfilePage() {
                           </div>
                         ))}
                       </div>
-
                       <div className="text-xs text-gray-400">
                         <span>NFT Address: </span>
                         <a
@@ -303,6 +307,7 @@ export default function ProfilePage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-400 hover:text-blue-300"
+                          onClick={(e) => e.stopPropagation()}
                         >
                           {nft.address.substring(0, 8)}...
                           {nft.address.substring(nft.address.length - 8)}
@@ -316,6 +321,18 @@ export default function ProfilePage() {
           )}
         </motion.div>
       </section>
+
+      {/* NFT Modal */}
+      {selectedNFT && (
+        <NFTModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedNFT(null);
+          }}
+          nft={selectedNFT}
+        />
+      )}
     </div>
   );
 }

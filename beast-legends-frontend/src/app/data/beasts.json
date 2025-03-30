@@ -1,0 +1,153 @@
+{
+  "beasts": [
+    {
+      "name": "Owlbear",
+      "img": "/marketplace/rare.png",
+      "rarity": "Rare",
+      "stats": {
+        "dodge": 8,
+        "health": 2200,
+        "attack": {
+          "min": 30,
+          "max": 160
+        }
+      },
+      "type": "Hybrid",
+      "element": "Lightning",
+      "anomaly": false
+    },
+    {
+      "name": "Dragon",
+      "img": "/marketplace/epic.png",
+      "rarity": "Epic",
+      "stats": {
+        "dodge": 16,
+        "health": 3600,
+        "attack": {
+          "min": 60,
+          "max": 190
+        }
+      },
+      "type": "Draconic",
+      "element": "Fire",
+      "anomaly": false
+    },
+    {
+      "name": "Lion",
+      "img": "/marketplace/common.png",
+      "rarity": "Common",
+      "stats": {
+        "dodge": 10,
+        "health": 1200,
+        "attack": {
+          "min": 30,
+          "max": 100
+        }
+      },
+      "type": "Beast",
+      "element": "Water",
+      "anomaly": false
+    },
+    {
+      "name": "Leviathan",
+      "img": "/marketplace/epic-2.png",
+      "rarity": "Epic",
+      "stats": {
+        "dodge": 10,
+        "health": 3300,
+        "attack": {
+          "min": 80,
+          "max": 220
+        }
+      },
+      "type": "Aquatic",
+      "element": "Water",
+      "anomaly": false
+    },
+    {
+      "name": "Vaelorith",
+      "rarity": "Mythic",
+      "stats": {
+        "dodge": 20,
+        "health": 4200,
+        "attack": {
+          "min": 80,
+          "max": 250
+        }
+      },
+      "type": "Elemental",
+      "element": "Earth",
+      "anomaly": true
+    },
+    {
+      "name": "Solara",
+      "img": "/marketplace/rare-2.png",
+      "rarity": "Rare",
+      "stats": {
+        "dodge": 13,
+        "health": 1900,
+        "attack": {
+          "min": 30,
+          "max": 160
+        }
+      },
+      "type": "Celestial",
+      "element": "Fire",
+      "anomaly": false
+    },
+    {
+      "name": "Lumina",
+      "img": "/marketplace/common-2.png",
+      "rarity": "Common",
+      "stats": {
+        "dodge": 15,
+        "health": 1000,
+        "attack": {
+          "min": 20,
+          "max": 80
+        }
+      },
+      "type": "Spirit",
+      "element": "Nature",
+      "anomaly": false
+    },
+    {
+      "name": "Aurelius",
+      "img": "/marketplace/mythic-2.png",
+      "rarity": "Mythic",
+      "stats": {
+        "dodge": 12,
+        "health": 4400,
+        "attack": {
+          "min": 110,
+          "max": 260
+        }
+      },
+      "type": "Draconic",
+      "element": "Earth",
+      "anomaly": "Wings, Armored"
+    }
+  ],
+  "rarityLevels": [
+    "Common",
+    "Rare",
+    "Epic",
+    "Mythic"
+  ],
+  "elements": [
+    "Fire",
+    "Water",
+    "Earth",
+    "Lightning",
+    "Nature"
+  ],
+  "types": [
+    "Beast",
+    "Draconic",
+    "Elemental",
+    "Hybrid",
+    "Aquatic",
+    "Celestial",
+    "Spirit"
+  ]
+} 

@@ -4,26 +4,23 @@ import path from 'path';
 
 export async function POST(request: Request) {
   try {
-    // Use the specific common.png image
-    const imagePath = path.join(process.cwd(), 'public', 'marketplace', 'mythic-2-square.png');
+    const { imagePath } = await request.json();
+    
+    // If no image path provided, use a default image
+    const targetImagePath = imagePath 
+      ? path.join(process.cwd(), 'public', imagePath.replace(/^\/+/, ''))
+      : path.join(process.cwd(), 'public', 'mint', 'back-card.png');
     
     // Check if the file exists
     let imageBuffer;
     try {
-      imageBuffer = fs.readFileSync(imagePath);
+      imageBuffer = fs.readFileSync(targetImagePath);
     } catch (err) {
-      console.error('common.png not found, falling back to any available image');
+      console.error(`Image not found at ${targetImagePath}, falling back to default image`);
       
-      // Fallback to any image in the marketplace folder
-      const marketplacePath = path.join(process.cwd(), 'public', 'marketplace');
-      const files = fs.readdirSync(marketplacePath);
-      const imageFile = files.find(file => file.endsWith('.png') || file.endsWith('.jpg'));
-      
-      if (!imageFile) {
-        throw new Error('No image files found in marketplace directory');
-      }
-      
-      imageBuffer = fs.readFileSync(path.join(marketplacePath, imageFile));
+      // Fallback to the default back card image
+      const defaultImagePath = path.join(process.cwd(), 'public', 'mint', 'back-card.png');
+      imageBuffer = fs.readFileSync(defaultImagePath);
     }
     
     // Convert to base64
