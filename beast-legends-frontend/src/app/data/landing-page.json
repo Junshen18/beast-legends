@@ -3,7 +3,7 @@
     "links": [
       { "label": "About", "href": "about" },
       { "label": "Communities", "href": "communities" },
-      { "label": "Launch App", "href": "dapp" },
+      { "label": "Launch", "href": "dapp" },
       { "label": "Marketplace", "href": "marketplace" },
       { "label": "Mint", "href": "mint" }
 

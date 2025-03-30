@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 export default function Navigation() {
   const [isOverWhiteSection, setIsOverWhiteSection] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { connected, publicKey } = useWallet();
   const router = useRouter();
   const [previousConnectionState, setPreviousConnectionState] = useState(false);
@@ -56,146 +57,156 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const mobileMenu = document.getElementById('mobile-menu');
+      const hamburgerButton = document.getElementById('hamburger-button');
+      
+      if (mobileMenu && hamburgerButton && 
+          !mobileMenu.contains(event.target as Node) && 
+          !hamburgerButton.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   // Define a consistent width for all navigation items
   const navItemClass = "w-40 text-center flex justify-center items-center";
 
+  const renderNavLink = (link: any) => {
+    if (link.label === "Launch") {
+      return connected ? (
+        <Link href="/dapp" key={link.label} className="flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300">
+          <Image
+            src="/landing-page/launch-left.png"
+            alt="launch left"
+            width={80}
+            height={50}
+          />
+          <div className="py-3 text-3xl">
+            {link.label}
+          </div>
+          <Image
+            src="/landing-page/launch-right.png"
+            alt="launch right"
+            width={80}
+            height={50}
+          />
+        </Link>
+      ) : (
+        <div 
+          key={link.label} 
+          className="flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300 cursor-pointer"
+          onClick={() => {
+            const walletButton = document.querySelector('.wallet-adapter-button');
+            if (walletButton) {
+              (walletButton as HTMLElement).click();
+            }
+          }}
+        >
+          <Image
+            src="/landing-page/launch-left.png"
+            alt="launch left"
+            width={80}
+            height={50}
+          />
+          <div className="py-3 text-3xl">
+            Launch App
+          </div>
+          <Image
+            src="/landing-page/launch-right.png"
+            alt="launch right"
+            width={80}
+            height={50}
+          />
+        </div>
+      );
+    }
+
+    return (
+      <div key={link.label} className={`group ${navItemClass}`}>
+        <a
+          href={link.href}
+          className={`pointer-events-auto cursor-pointer px-4 py-2 z-[100] flex items-center justify-center rounded-md w-full ${
+            isOverWhiteSection
+              ? "text-black group-hover:bg-black/10 group-hover:backdrop-blur-md"
+              : "text-white group-hover:bg-black/20 group-hover:backdrop-blur-md"
+          }`}
+        >
+          {link.label}
+        </a>
+      </div>
+    );
+  };
+
   return (
     <nav className="fixed w-full bg-transparent z-50 font-dark-mystic">
-      <div className="mx-auto px-12 h-24 flex items-center justify-between">
+      <div className="mx-auto px-4 sm:px-12 h-24 flex items-center justify-center md:justify-between">
         <Link href="/">
           <Image
             src="/white-title.svg"
             alt="Beast Legends Logo"
             width={190}
             height={168}
-            className={`${isOverWhiteSection ? "invert" : ""}`}
+            className={`md:${isOverWhiteSection ? "invert" : ""}`}
           />
         </Link>
-        <div
-          className={`flex items-center gap-8 text-2xl ${
-            isOverWhiteSection ? "text-black" : "text-white"
-          }`}
-        >
-          {data.navigation.links.map((link) => {
-            // Special handling for "More" to add dropdown
-            if (link.label === "Launch App") {
-              // If connected, make this a direct link to dapp
-              // If not connected, make it trigger the wallet connection
-              return connected ? (
-                <Link href="/dapp" key={link.label} className="flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300">
-                  <Image
-                    src="/landing-page/launch-left.png"
-                    alt="launch left"
-                    width={80}
-                    height={50}
-                  />
-                  <div className="py-3 text-3xl">
-                    {link.label}
-                  </div>
-                  <Image
-                    src="/landing-page/launch-right.png"
-                    alt="launch right"
-                    width={80}
-                    height={50}
-                  />
-                </Link>
-              ) : (
-                <div 
-                  key={link.label} 
-                  className="flex flex-row items-center gap-2 hover:scale-105 transition-all duration-300 cursor-pointer"
-                  onClick={() => {
-                    const walletButton = document.querySelector('.wallet-adapter-button');
-                    if (walletButton) {
-                      (walletButton as HTMLElement).click();
-                    }
-                  }}
-                >
-                  <Image
-                    src="/landing-page/launch-left.png"
-                    alt="launch left"
-                    width={80}
-                    height={50}
-                  />
-                  <div className="py-3 text-3xl">
-                    Launch App
-                  </div>
-                  <Image
-                    src="/landing-page/launch-right.png"
-                    alt="launch right"
-                    width={80}
-                    height={50}
-                  />
-                </div>
-              );
-            }
-            // else if (link.label === "More") {
-            //   return (
-            //     <div key={link.label} className={`relative group ${navItemClass}`}>
-            //       {/* Main button wrapper with padding to create hoverable area */}
-            //       <div className="py-3 w-full">
-            //         <div
-            //           className={`pointer-events-auto cursor-pointer px-4 py-2 z-[100] flex items-center justify-center rounded-md w-full ${
-            //             isOverWhiteSection
-            //               ? "text-black group-hover:bg-black/10 group-hover:backdrop-blur-md"
-            //               : "text-white group-hover:bg-black/20 group-hover:backdrop-blur-md"
-            //           }`}
-            //         >
-            //           {link.label}
-            //         </div>
-            //       </div>
-
-            //       {/* Dropdown Menu - positioned to remove gap */}
-            //       <div className="text-base absolute mt-2 right-0 top-[calc(100%-12px)] w-[190px] backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
-            //         <div
-            //           className={`rounded-md overflow-hidden ${
-            //             isOverWhiteSection ? "bg-white/30" : "bg-black/30"
-            //           }`}
-            //         >
-            //           <Link
-            //             href="/communities"
-            //             className={`block w-full text-left px-4 py-2 hover:bg-black/20 transition-colors cursor-pointer ${
-            //               isOverWhiteSection
-            //                 ? "text-black hover:text-white"
-            //                 : "text-white"
-            //             }`}
-            //           >
-            //             Communities
-            //           </Link>
-            //           <Link
-            //             href="/leaderboard"
-            //             className={`block w-full text-left px-4 py-2 hover:bg-black/20 transition-colors cursor-pointer ${
-            //               isOverWhiteSection
-            //                 ? "text-black hover:text-white"
-            //                 : "text-white"
-            //             }`}
-            //           >
-            //             Leaderboard
-            //           </Link>
-            //         </div>
-            //       </div>
-            //     </div>
-            //   );
-            // }
-
-            // Regular navigation links
-            return (
-              <div key={link.label} className={`group ${navItemClass}`}>
-                <a
-                  href={link.href}
-                  className={`pointer-events-auto cursor-pointer px-4 py-2 z-[100] flex items-center justify-center rounded-md w-full ${
-                    isOverWhiteSection
-                      ? "text-black group-hover:bg-black/10 group-hover:backdrop-blur-md"
-                      : "text-white group-hover:bg-black/20 group-hover:backdrop-blur-md"
-                  }`}
-                >
-                  {link.label}
-                </a>
-              </div>
-            );
-          })}
+        <div className={`hidden md:flex flex-row items-center text-2xl ${isOverWhiteSection ? "text-black" : "text-white"}`}>
+            {data.navigation.links.map(renderNavLink)}
+          </div>
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center text-2xl">
+            <WalletButton isOverWhiteSection={isOverWhiteSection} />
         </div>
-        <div>
-          <WalletButton isOverWhiteSection={isOverWhiteSection} />
+
+        {/* Mobile Menu Button */}
+        <button
+          id="hamburger-button"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="absolute right-4 md:hidden p-2 rounded-lg hover:bg-black/20 transition-colors"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            stroke={isOverWhiteSection ? "currentColor" : "white"}
+          >
+            {isMobileMenuOpen ? (
+              <path d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <div
+        id="mobile-menu"
+        className={`fixed inset-0 bg-black/95 backdrop-blur-lg transform transition-transform duration-300 ease-in-out md:hidden ${
+          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex flex-col items-center justify-center h-full space-y-8">
+          {data.navigation.links.map((link) => (
+            <div
+              key={link.label}
+              className="text-2xl text-white hover:text-gray-300 transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {renderNavLink(link)}
+            </div>
+          ))}
+          <div className="mt-4">
+            <WalletButton isOverWhiteSection={false} />
+          </div>
         </div>
       </div>
     </nav>

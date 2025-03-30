@@ -4,22 +4,25 @@ import data from "../../data/landing-page.json";
 
 export default function Rarity() {
   return (
-    <section className="bg-[#0E0E0C]" id="rarity">
-      <div className="flex flex-row max-w-[1920px] mx-auto">
-        <div className="relative w-[550px] flex-shrink-0">
+    <section className="bg-[url('/landing-page/rarity-bg.png')] bg-cover bg-center md:bg-[#0E0E0C] " id="rarity">
+      <div className="flex flex-col lg:flex-row max-w-[1920px] mx-auto">
+        <div className="hidden lg:block relative w-full lg:w-[550px] flex-shrink-0">
           <Image
             src="/landing-page/nft-rarity.png"
             alt="NFT Rarity"
             width={550}
             height={789}
-            className="h-full object-cover"
+            className="h-full w-full object-cover"
           />
         </div>
-        <div className="max-w-7xl mx-auto flex flex-col gap-6 py-20 px-6 w-full">
-          <Reveal width="100%" direction="right" className="text-right">
-            <div className="text-6xl text-white">{data.rarity.title}</div>
+        <div className="max-w-7xl mx-auto flex flex-col gap-6 py-12 lg:py-20 px-6 w-full">
+          <div className="block md:hidden">
+          <div className="text-4xl md:text-6xl text-white">{data.rarity.title}</div>
+          </div>
+          <Reveal width="100%" direction="right" className="hidden md:block text-right">
+            <div className="text-4xl md:text-6xl text-white">{data.rarity.title}</div>
           </Reveal>
-          <Reveal width="100%" direction="right" className="text-right">
+          <Reveal width="100%" direction="right" className="hidden md:block text-right">
             <div className="flex flex-row items-center justify-end">
               <Image
                 src="/landing-page/diamond-right.svg"
@@ -27,7 +30,7 @@ export default function Rarity() {
                 width={10}
                 height={10}
               />
-              <hr className="w-[200px] md:w-[300px] xl:w-[500px] h-[2px] bg-white" />
+              <hr className="w-[100px] sm:w-[200px] md:w-[300px] xl:w-[500px] h-[2px] bg-white" />
               <Image
                 src="/landing-page/diamond-left.svg"
                 alt="line"
@@ -38,32 +41,32 @@ export default function Rarity() {
           </Reveal>
 
           {/* Rarity Table */}
-          <div className="mt-8 w-full font-inter">
-            <div className="rounded-lg overflow-hidden border border-white/20">
+          <div className="mt-8 w-full font-inter overflow-x-auto">
+            <div className="rounded-lg overflow-hidden border border-white/20 min-w-[600px]">
               {/* Table Header */}
-              <div className="grid grid-cols-3 text-2xl font-bold bg-white/5">
-                <div className="p-6 border-r border-white/20">Rarity Tier</div>
-                <div className="p-6 border-r border-white/20">Trait Included</div>
-                <div className="p-6">Drop Rate</div>
+              <div className="grid grid-cols-3 text-lg md:text-2xl font-bold bg-white/5">
+                <div className="p-4 md:p-6 border-r border-white/20">Rarity Tier</div>
+                <div className="p-4 md:p-6 border-r border-white/20">Trait Included</div>
+                <div className="p-4 md:p-6">Drop Rate</div>
               </div>
 
               {/* Table Rows */}
               {data.rarity.tiers.map((row, index) => (
                 <div
                   key={row.tier}
-                  className={`grid grid-cols-3 text-xl ${
+                  className={`grid grid-cols-3 text-base md:text-xl ${
                     index % 2 === 0 ? "bg-white/[0.02]" : "bg-transparent"
                   }`}
                 >
-                  <div className="p-6 border-r border-white/20">{row.tier}</div>
-                  <div className="p-6 border-r border-white/20">{row.traits}</div>
-                  <div className="p-6">{row.rate}</div>
+                  <div className="p-4 md:p-6 border-r border-white/20">{row.tier}</div>
+                  <div className="p-4 md:p-6 border-r border-white/20">{row.traits}</div>
+                  <div className="p-4 md:p-6">{row.rate}</div>
                 </div>
               ))}
             </div>
 
             {/* Table Caption */}
-            <div className="mt-4 text-white/80 text-lg">
+            <div className="mt-4 text-white/80 text-base md:text-lg">
               From Common to Mythic—discover the traits that define your Beasts.{" "}
               <a
                 href="#"
@@ -71,7 +74,7 @@ export default function Rarity() {
               >
                 Learn more about rarity
                 <svg
-                  className="w-5 h-5 ml-1"
+                  className="w-4 h-4 md:w-5 md:h-5 ml-1"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

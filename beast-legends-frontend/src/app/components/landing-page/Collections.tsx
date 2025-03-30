@@ -53,8 +53,11 @@ export default function Collections() {
     return () => clearInterval(interval);
   }, [isTransitioning]);
 
-  // Create an expanded array for smoother transitions
+  // Modified to handle both mobile and desktop views
   const getVisibleImages = () => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      return [images[currentIndex]];
+    }
     return [
       images[(currentIndex - 1 + images.length) % images.length],
       images[currentIndex],
@@ -108,7 +111,9 @@ export default function Collections() {
                 <div 
                   key={`${image.src}-${index}`}
                   className={`transition-all duration-500 ease-in-out transform ${
-                    isCenter ? 'scale-100 z-10' : 'scale-90 brightness-50'
+                    isCenter || getVisibleImages().length === 1 
+                      ? 'scale-100 z-10' 
+                      : 'scale-90 brightness-50 hidden md:block'
                   }`}
                 >
                   <Image
