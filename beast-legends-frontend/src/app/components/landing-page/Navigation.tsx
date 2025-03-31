@@ -115,7 +115,7 @@ export default function Navigation() {
             height={50}
           />
           <div className="py-3 text-3xl">
-            Launch App
+            Launch
           </div>
           <Image
             src="/landing-page/launch-right.png"

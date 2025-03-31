@@ -46,7 +46,7 @@ export default function WalletButton({ isOverWhiteSection }: WalletButtonProps) 
         </div>
       </div>
       {/* Dropdown Menu - positioned to remove gap */}
-      <div className="absolute mt-2 right-0 top-[calc(100%-12px)] w-[190px] backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
+      <div className="absolute mt-2 right-0 top-[calc(100%-12px)] text-xl w-[190px] backdrop-blur-md opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
         <div className={` rounded-md overflow-hidden ${
           isOverWhiteSection ? 'bg-white/30' : 'bg-black/30'
         }`}>

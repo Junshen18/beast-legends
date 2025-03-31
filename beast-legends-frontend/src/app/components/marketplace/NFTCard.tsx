@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { Metaplex } from "@metaplex-foundation/js";
+import { Listing as MetaplexListing, LazyListing } from "@metaplex-foundation/js";
 import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
 import { useWallet } from '@solana/wallet-adapter-react';
 import ListingModal from "./ListingModal";
@@ -11,29 +11,52 @@ interface NFTCardProps {
   name: string;
   image: string;
   price: number;
-  rarity?: string;
+  rarity: string;
   attributes: Record<string, string>;
-  listing?: any;
+  listing: MetaplexListing | LazyListing;
   onList: () => void;
+  onBuy: () => Promise<void>;
+  onCancelListing: () => Promise<void>;
 }
 
-export default function NFTCard({ id, name, image, price, rarity = "Common", attributes, listing, onList }: NFTCardProps) {
+const NFTCard: React.FC<NFTCardProps> = ({
+  id,
+  name,
+  image,
+  price,
+  rarity,
+  attributes,
+  listing,
+  onList,
+  onBuy,
+  onCancelListing
+}) => {
   const [isListingModalOpen, setIsListingModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCancelling, setIsCancelling] = useState(false);
   const wallet = useWallet();
 
   const handleBuy = async () => {
-    if (!wallet.connected) {
-      alert("Please connect your wallet first");
-      return;
-    }
-
     try {
-      const connection = new Connection(clusterApiUrl("devnet"));
-      // Implement buy functionality here
-      alert("Buy functionality coming soon!");
+      setIsLoading(true);
+      await onBuy();
     } catch (error) {
-      console.error('Error buying NFT:', error);
+      console.error("Error buying NFT:", error);
       alert("Failed to buy NFT. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancelListing = async () => {
+    try {
+      setIsCancelling(true);
+      await onCancelListing();
+    } catch (error) {
+      console.error("Error cancelling listing:", error);
+      alert("Failed to cancel listing. Please try again.");
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -42,29 +65,58 @@ export default function NFTCard({ id, name, image, price, rarity = "Common", att
     onList();
   };
 
+  const getRarityColor = (rarity: string) => {
+    switch (rarity.toLowerCase()) {
+      case "legendary":
+        return "text-yellow-500";
+      case "epic":
+        return "text-purple-500";
+      case "rare":
+        return "text-blue-500";
+      case "uncommon":
+        return "text-green-500";
+      default:
+        return "text-gray-500";
+    }
+  };
+
+  // Check if the current user is the seller
+  const isSeller = wallet.connected && wallet.publicKey && 
+    (listing as any).sellerAddress?.toString() === wallet.publicKey.toString();
+
   return (
-    <div className="bg-gray-900 rounded-lg overflow-hidden shadow-lg">
-      <img src={image} alt={name} className="w-full h-48 object-cover" />
+    <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+      <div className="relative h-full w-full">
+        <img
+          src={image}
+          alt={name}
+          className="object-cover w-full h-full"
+        />
+      </div>
       <div className="p-4">
-        <h3 className="text-xl font-bold text-white mb-2">{name}</h3>
-        <p className={`text-lg font-semibold mb-2 ${getRarityColor(rarity)}`}>
+        <h3 className="text-lg font-semibold text-white mb-2">{name}</h3>
+        <div className={`text-sm font-medium mb-2 ${getRarityColor(rarity)}`}>
           {rarity}
-        </p>
-        <div className="flex justify-between items-center">
-          <p className="text-white">Price: {price} SOL</p>
-          {wallet.connected && wallet.publicKey?.toString() === listing?.seller?.toString() ? (
+        </div>
+        <div className="text-white mb-4">
+          <span className="font-medium">Price:</span> {price} SOL
+        </div>
+        <div className="flex justify-center gap-2">
+          {isSeller ? (
             <button
-              onClick={() => setIsListingModalOpen(true)}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              onClick={handleCancelListing}
+              disabled={isCancelling}
+              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              List
+              {isCancelling ? "Cancelling..." : "Cancel Listing"}
             </button>
           ) : (
             <button
               onClick={handleBuy}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              disabled={isLoading}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Buy
+              {isLoading ? "Buying..." : "Buy"}
             </button>
           )}
         </div>
@@ -74,7 +126,7 @@ export default function NFTCard({ id, name, image, price, rarity = "Common", att
         isOpen={isListingModalOpen}
         onClose={() => setIsListingModalOpen(false)}
         nft={{
-          mint: id,
+          mintAddress: id,
           name,
           image
         }}
@@ -82,19 +134,6 @@ export default function NFTCard({ id, name, image, price, rarity = "Common", att
       />
     </div>
   );
-}
+};
 
-function getRarityColor(rarity: string = "Common"): string {
-  switch (rarity.toLowerCase()) {
-    case 'common':
-      return 'text-gray-400';
-    case 'rare':
-      return 'text-blue-400';
-    case 'epic':
-      return 'text-purple-400';
-    case 'mythic':
-      return 'text-yellow-400';
-    default:
-      return 'text-white';
-  }
-}
+export default NFTCard;

@@ -2,6 +2,7 @@
 import React from "react";
 import GridListView from "../ui/GridListView";
 import NFTCard from "./NFTCard";
+import { Listing as MetaplexListing, LazyListing } from "@metaplex-foundation/js";
 
 interface NFTGridProps {
   items: any[];
@@ -14,9 +15,11 @@ interface NFTGridProps {
   loading: boolean;
   wallet: any;
   onListNFT: (nft: { mintAddress: string; name: string; image: string; }) => void;
+  onBuy: (listing: MetaplexListing | LazyListing) => Promise<void>;
+  onCancelListing: (listing: MetaplexListing | LazyListing) => Promise<void>;
 }
 
-const NFTGrid: React.FC<NFTGridProps> = ({ items, filters, loading, wallet, onListNFT }) => {
+const NFTGrid: React.FC<NFTGridProps> = ({ items, filters, loading, wallet, onListNFT, onBuy, onCancelListing }) => {
   // Apply filters to NFTs
   const filteredNFTs = items.filter((nft) => {
     // Price filter
@@ -60,7 +63,19 @@ const NFTGrid: React.FC<NFTGridProps> = ({ items, filters, loading, wallet, onLi
   });
 
   if (loading) {
-    return <div className="text-white">Loading NFTs...</div>;
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-white text-xl">Loading NFTs...</div>
+      </div>
+    );
+  }
+
+  if (sortedNFTs.length === 0) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-white text-xl">No NFTs found</div>
+      </div>
+    );
   }
 
   return (
@@ -68,11 +83,12 @@ const NFTGrid: React.FC<NFTGridProps> = ({ items, filters, loading, wallet, onLi
       <GridListView
         data={sortedNFTs.map(nft => ({
           ...nft,
-          id: String(nft.id || nft.address || nft.mint), // Ensure id is always a string
-          rarity: nft.rarity || "Common" // Ensure rarity has a default value
+          id: String(nft.id || nft.address || nft.mint),
+          rarity: nft.rarity || "Common",
+          price: nft.price || 0,
+          image: nft.image || "/placeholder.png"
         }))}
         columns={4}
-        cardWidth={300}
         renderCard={(nft) => (
           <NFTCard 
             key={nft.id}
@@ -80,14 +96,16 @@ const NFTGrid: React.FC<NFTGridProps> = ({ items, filters, loading, wallet, onLi
             name={nft.name}
             image={nft.image}
             price={nft.price}
-            rarity={nft.rarity || "Common"}
+            rarity={nft.rarity}
             attributes={nft.attributes}
             listing={nft.listing}
             onList={() => onListNFT({
-              mintAddress: nft.mintAddress || nft.mint,  // Use mintAddress if available, fallback to mint
+              mintAddress: nft.mintAddress || nft.mint,
               name: nft.name,
               image: nft.image
             })}
+            onBuy={() => onBuy(nft.listing)}
+            onCancelListing={() => onCancelListing(nft.listing)}
           />
         )}
         className="text-white"

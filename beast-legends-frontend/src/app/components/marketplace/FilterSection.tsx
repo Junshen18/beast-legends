@@ -13,10 +13,7 @@ interface FilterSectionProps {
 
 export default function FilterSection({ filters, setFilters }: FilterSectionProps) {
   const rarityOptions = ["Common", "Rare", "Epic", "Mythic"];
-  const attributeTypes = {
-    Background: ["Red", "Blue", "Green"],
-    Eyes: ["Normal", "Laser", "Sleepy"],
-    Mouth: ["Smile", "Frown", "Open"],
+  const attributeTypes: Record<string, string[]> = {
     // Add more attributes as needed
   };
 
@@ -77,11 +74,11 @@ export default function FilterSection({ filters, setFilters }: FilterSectionProp
         </div>
 
         {/* Attributes Filter */}
-        {Object.entries(attributeTypes).map(([type, options]) => (
+        {Object.entries(attributeTypes).map(([type, options]: [string, string[]]) => (
           <div key={type}>
             <h3 className="text-white text-xl mb-4">{type}</h3>
             <div className="space-y-2">
-              {options.map((option) => (
+              {options.map((option: string) => (
                 <label
                   key={option}
                   className="flex items-center text-white cursor-pointer"

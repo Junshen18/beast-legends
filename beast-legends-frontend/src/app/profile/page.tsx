@@ -21,6 +21,10 @@ interface NFTData {
     trait_type: string;
     value: string;
   }>;
+  isListed?: boolean;
+  listingPrice?: number;
+  count?: number;
+  allMintAddresses?: string[];
 }
 
 export default function ProfilePage() {
@@ -33,6 +37,15 @@ export default function ProfilePage() {
   const [selectedNFT, setSelectedNFT] = useState<NFTData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   
+  // Helper function to convert IPFS URLs to HTTP URLs
+  const convertIPFStoHTTP = (url: string) => {
+    if (!url) return url;
+    if (url.startsWith('ipfs://')) {
+      return url.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/');
+    }
+    return url;
+  };
+
   // Refs for scroll effect
   const collectionRef = useRef<HTMLDivElement>(null);
   
@@ -72,6 +85,60 @@ export default function ProfilePage() {
     setMounted(true);
   }, []);
 
+  const checkIfNFTIsListed = async (mintAddress: string) => {
+    if (!metaplex) return null;
+
+    try {
+      // Fetch the auction house address from the config
+      const response = await fetch('/api/config');
+      const config = await response.json();
+      const auctionHouseAddress = new PublicKey(config.auctionHouseAddress);
+
+      // Find the auction house
+      const auctionHouse = await metaplex
+        .auctionHouse()
+        .findByAddress({ address: auctionHouseAddress });
+
+      // Find all listings for the NFT
+      const listings = await metaplex
+        .auctionHouse()
+        .findListings({
+          auctionHouse,
+          filter: {
+            mint: new PublicKey(mintAddress),
+          },
+        });
+
+      if (listings.length > 0) {
+        // Get the first active listing
+        const listing = listings[0];
+        
+        // Check if the listing is still valid
+        try {
+          const listingStatus = await metaplex.auctionHouse().findListingByTradeState({
+            tradeStateAddress: listing.tradeStateAddress,
+            auctionHouse
+          });
+
+          // If listing exists and is not cancelled, return the listing info
+          if (listingStatus && !(listingStatus as any).canceledAt) {
+            return {
+              isListed: true,
+              price: listing.price.basisPoints.toNumber() / 1e9,
+            };
+          }
+        } catch (error) {
+          console.log("Listing no longer exists or has been cancelled:", listing.tradeStateAddress.toString());
+        }
+      }
+
+      return { isListed: false };
+    } catch (error) {
+      console.error('Error checking listing status:', error);
+      return null;
+    }
+  };
+
   const fetchUserNFTs = async () => {
     if (!publicKey || !metaplex) return;
 
@@ -84,70 +151,59 @@ export default function ProfilePage() {
         .findAllByOwner({ owner: publicKey });
       console.log("All NFTs:", allNfts);
 
-      // Log each NFT's symbol to debug
-      allNfts.forEach((nft: any) => {
-        console.log(
-          `NFT ${nft.mintAddress.toString()} - Symbol: "${nft.symbol}", Name: "${
-            nft.name
-          }"`
-        );
-      });
-
       // Filter to only include your project's NFTs (with symbol "BEAST")
-      // Use a case-insensitive comparison and trim any whitespace
       const beastNfts = allNfts.filter(
         (nft: any) => nft.symbol && nft.symbol.trim().toUpperCase() === "BEAST"
       );
-      console.log("Beast NFTs:", beastNfts);
 
-      // Format the NFT data for display
-      const formattedNfts = await Promise.all(
-        beastNfts.map(async (nft: any) => {
-          // Try to load the JSON metadata
-          let metadata = null;
-          try {
-            if (nft.uri) {
-              console.log(`Fetching metadata from: ${nft.uri}`);
-              const response = await fetch(
-                nft.uri.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/")
-              );
-              metadata = await response.json();
-              console.log(`Metadata for ${nft.mintAddress.toString()}:`, metadata);
-            }
-          } catch (error) {
-            console.error(
-              "Error fetching metadata for NFT:",
-              nft.address.toString(),
-              error
-            );
+      // Group identical NFTs by name and attributes
+      const nftGroups = new Map<string, NFTData[]>();
+
+      // Format and group the NFT data
+      for (const nft of beastNfts) {
+        let metadata = null;
+        try {
+          if (nft.uri) {
+            const httpUri = convertIPFStoHTTP(nft.uri);
+            const response = await fetch(httpUri);
+            metadata = await response.json();
           }
-
-          return {
-            address: nft.address.toString(),
-            mintAddress: nft.mintAddress.toString(),
-            name: nft.name || "Unnamed NFT",
-            image:
-              metadata?.image?.replace(
-                "ipfs://",
-                "https://gateway.pinata.cloud/ipfs/"
-              ) || "/placeholder.png",
-            symbol: nft.symbol || "",
-            attributes: metadata?.attributes || [],
-          };
-        })
-      );
-
-      // Check if the NFT is actually owned by the connected wallet
-      const tokenAccounts = await connection!.getTokenAccountsByOwner(
-        publicKey,
-        {
-          programId: new PublicKey(
-            "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-          ),
+        } catch (error) {
+          console.error("Error fetching metadata for NFT:", nft.address.toString(), error);
         }
-      );
 
-      console.log("Token accounts:", tokenAccounts);
+        // Create a unique key based on name and attributes
+        const attributes = metadata?.attributes || [];
+        const key = `${nft.name}-${attributes.map((attr: any) => `${attr.trait_type}:${attr.value}`).join('|')}`;
+
+        const nftData: NFTData = {
+          address: nft.address.toString(),
+          mintAddress: nft.mintAddress.toString(),
+          name: nft.name || "Unnamed NFT",
+          image: convertIPFStoHTTP(metadata?.image) || "/placeholder.png",
+          symbol: nft.symbol || "",
+          attributes: attributes,
+          allMintAddresses: [nft.mintAddress.toString()]
+        };
+
+        // Check if the NFT is listed
+        const listingStatus = await checkIfNFTIsListed(nft.mintAddress.toString());
+        nftData.isListed = listingStatus?.isListed || false;
+        nftData.listingPrice = listingStatus?.price;
+
+        if (nftGroups.has(key)) {
+          const group = nftGroups.get(key)!;
+          group[0].count = (group[0].count || 1) + 1;
+          group[0].allMintAddresses!.push(nft.mintAddress.toString());
+        } else {
+          nftGroups.set(key, [nftData]);
+        }
+      }
+
+      // Convert groups to array and sort by count
+      const formattedNfts = Array.from(nftGroups.values())
+        .map(group => group[0])
+        .sort((a, b) => (b.count || 1) - (a.count || 1));
 
       setNfts(formattedNfts);
     } catch (error) {
@@ -175,11 +231,7 @@ export default function ProfilePage() {
           address: nft.address.toString(),
           mintAddress: nft.mintAddress.toString(),
           name: nft.name || "Unnamed NFT",
-          image:
-            nft.json?.image?.replace(
-              "ipfs://",
-              "https://gateway.pinata.cloud/ipfs/"
-            ) || "/placeholder.png",
+          image: convertIPFStoHTTP(nft.json?.image) || "/placeholder.png",
           symbol: nft.symbol || "",
           attributes: nft.json?.attributes || [],
         };
@@ -200,7 +252,7 @@ export default function ProfilePage() {
   // Don't render wallet components until we're on the client
   if (!mounted) {
     return (
-      <div className="max-w-6xl mx-auto p-8 font-sans text-white">
+      <div className="max-w-6xl mx-auto p-8 font-sans text-white h-3/4">
         <h1 className="text-4xl font-bold text-center mb-8">
           Your Beast Legends Collection
         </h1>
@@ -245,17 +297,19 @@ export default function ProfilePage() {
           </div>
           
           {!publicKey ? (
-            <div className="text-center py-12">
+            <div className="text-center py-12 h-3/4">
               <p className="text-xl mb-4 text-white">
                 Connect your wallet to view your collection
               </p>
+              <div className="h-[300px]"></div>
             </div>
           ) : loading ? (
-            <div className="text-center py-12">
+            <div className="text-center py-12 h-3/4">
               <p className="text-xl animate-pulse text-white">Loading your NFTs...</p>
+              <div className="h-[300px]"></div>
             </div>
           ) : nfts.length === 0 ? (
-            <div className="text-center py-12">
+            <div className="text-center py-12 h-3/4">
               <p className="text-xl mb-4 text-white">
                 No Beast Legends NFTs found in your wallet
               </p>
@@ -268,16 +322,21 @@ export default function ProfilePage() {
             </div>
           ) : (
             <div className="h-full">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-6 gap-6">
                 {nfts.map((nft) => (
                   <div
                     key={nft.address}
-                    className="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-white cursor-pointer hover:scale-105 transition-transform duration-200"
+                    className="bg-gray-800 rounded-xl overflow-hidden shadow-lg text-white cursor-pointer hover:scale-105 transition-transform duration-200 relative"
                     onClick={() => {
                       setSelectedNFT(nft);
                       setIsModalOpen(true);
                     }}
                   >
+                    {nft.count && nft.count > 1 && (
+                      <div className="absolute top-2 left-2 bg-purple-600 text-white px-2 py-1 rounded-md text-sm font-medium z-10">
+                        x{nft.count}
+                      </div>
+                    )}
                     <Image
                       src={nft.image}
                       alt={nft.name}
@@ -290,6 +349,11 @@ export default function ProfilePage() {
                     />
                     <div className="p-6">
                       <h3 className="text-xl font-semibold mb-2">{nft.name}</h3>
+                      {/* {nft.isListed && nft.listingPrice && (
+                        <div className="text-sm text-purple-400 mb-2">
+                          Price: {nft.listingPrice} SOL
+                        </div>
+                      )} */}
                       <div className="mb-4">
                         {nft.attributes.map((attr, index) => (
                           <div

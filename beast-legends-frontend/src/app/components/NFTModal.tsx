@@ -20,6 +20,8 @@ interface NFTModalProps {
       trait_type: string;
       value: string;
     }>;
+    count?: number;
+    allMintAddresses?: string[];
   };
   onListingSuccess?: () => void;
 }
@@ -89,16 +91,34 @@ export default function NFTModal({ isOpen, onClose, nft, onListingSuccess }: NFT
                 translateZ="20"
                 className="text-xs text-neutral-500 dark:text-neutral-400"
               >
-                NFT Address:{" "}
-                <a
-                  href={`https://explorer.solana.com/address/${nft.mintAddress}?cluster=devnet`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 hover:text-blue-400"
-                >
-                  {nft.mintAddress.substring(0, 8)}...
-                  {nft.mintAddress.substring(nft.mintAddress.length - 8)}
-                </a>
+                NFT Addresses:
+                {nft.allMintAddresses && nft.allMintAddresses.length > 0 ? (
+                  nft.allMintAddresses.map((mintAddress, index) => (
+                    <div key={index} className="mt-1">
+                      <a
+                        href={`https://explorer.solana.com/address/${mintAddress}?cluster=devnet`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:text-blue-400"
+                      >
+                        {mintAddress.substring(0, 8)}...
+                        {mintAddress.substring(mintAddress.length - 8)}
+                      </a>
+                    </div>
+                  ))
+                ) : (
+                  <div className="mt-1">
+                    <a
+                      href={`https://explorer.solana.com/address/${nft.mintAddress}?cluster=devnet`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:text-blue-400"
+                    >
+                      {nft.mintAddress.substring(0, 8)}...
+                      {nft.mintAddress.substring(nft.mintAddress.length - 8)}
+                    </a>
+                  </div>
+                )}
               </CardItem>
             </div>
             {wallet.connected && (

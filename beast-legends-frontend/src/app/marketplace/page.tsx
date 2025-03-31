@@ -42,6 +42,8 @@ interface NFTGridProps {
   loading: boolean;
   wallet: any;
   onListNFT: (nft: { mintAddress: string; name: string; image: string; }) => void;
+  onBuy: (listing: MetaplexListing | LazyListing) => Promise<void>;
+  onCancelListing: (listing: MetaplexListing | LazyListing) => Promise<void>;
 }
 
 export default function MarketplacePage() {
@@ -52,6 +54,15 @@ export default function MarketplacePage() {
   const [showUserNFTs, setShowUserNFTs] = useState(false);
   const wallet = useWallet();
   
+  // Helper function to convert IPFS URLs to HTTP URLs
+  const convertIPFStoHTTP = (url: string) => {
+    if (!url) return url;
+    if (url.startsWith('ipfs://')) {
+      return url.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/');
+    }
+    return url;
+  };
+
   // Add filter state
   const [filters, setFilters] = useState({
     priceRange: { min: 0, max: 5 },
@@ -60,96 +71,108 @@ export default function MarketplacePage() {
     sortBy: "price_low_to_high"
   });
 
-  const fetchUserNFTs = async () => {
-    if (!wallet.publicKey || !wallet.signTransaction) return;
-
-    try {
-      const connection = new Connection(clusterApiUrl("devnet"));
-      const metaplex = Metaplex.make(connection).use(
-        walletAdapterIdentity({ publicKey: wallet.publicKey, signTransaction: wallet.signTransaction })
-      );
-
-      // Fetch all NFTs owned by the wallet
-      const allNfts = await metaplex
-        .nfts()
-        .findAllByOwner({ owner: wallet.publicKey });
-
-      // Filter to only include your project's NFTs (with symbol "BEAST")
-      const beastNfts = allNfts.filter(
-        (nft: any) => nft.symbol && nft.symbol.trim().toUpperCase() === "BEAST"
-      );
-
-      // Format the NFT data for display
-      const formattedNfts = await Promise.all(
-        beastNfts.map(async (nft: any) => {
-          let metadata = null;
-          try {
-            if (nft.uri) {
-              const response = await fetch(
-                nft.uri.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/")
-              );
-              metadata = await response.json();
-            }
-          } catch (error) {
-            console.error("Error fetching metadata for NFT:", nft.address.toString(), error);
-          }
-
-          return {
-            address: nft.address.toString(),
-            mintAddress: nft.mintAddress.toString(),
-            name: nft.name || "Unnamed NFT",
-            image: metadata?.image?.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/") || "/placeholder.png",
-            symbol: nft.symbol || "",
-            attributes: metadata?.attributes || [],
-          };
-        })
-      );
-
-      setUserNFTs(formattedNfts);
-      setShowUserNFTs(true);
-    } catch (error) {
-      console.error("Error fetching user NFTs:", error);
-    }
-  };
-
   const fetchListings = async () => {
     try {
-      const connection = new Connection(clusterApiUrl("devnet"));
-      const metaplex = new Metaplex(connection);
-      
-      const auctionHouse = await metaplex.auctionHouse().findByAddress({
-        address: new PublicKey(process.env.NEXT_PUBLIC_AUCTION_HOUSE_ADDRESS!)
-      });
+        setLoading(true);
+        const connection = new Connection(clusterApiUrl("devnet"));
+        const metaplex = new Metaplex(connection);
 
-      const fetchedListings = await metaplex.auctionHouse().findListings({
-        auctionHouse
-      });
+        // Fetch auction house address from the API
+        const response = await fetch('/api/config');
+        if (!response.ok) {
+            throw new Error('Failed to fetch config');
+        }
+        const config = await response.json();
 
-      const transformedListings = await Promise.all(
-        (fetchedListings as any[]).map(async (listing) => {
-          const asset = 'lazy' in listing ? await listing.asset : listing.asset;
-          return {
-            id: asset.address.toString(),
-            name: asset.name,
-            image: asset.json.image,
-            price: listing.price.basisPoints.toNumber() / 1e9,
-            rarity: asset.json.attributes.find((attr: any) => attr.trait_type === "Rarity")?.value || "Common",
-            attributes: asset.json.attributes.reduce((acc: any, attr: any) => {
-              acc[attr.trait_type] = attr.value;
-              return acc;
-            }, {}),
-            listing: listing
-          };
-        })
-      );
+        const auctionHouse = await metaplex.auctionHouse().findByAddress({
+            address: new PublicKey(config.auctionHouseAddress),
+        });
 
-      setListings(transformedListings);
+        console.log('Fetching listings for auction house:', auctionHouse.address.toString());
+
+        const fetchedListings = await metaplex.auctionHouse().findListings({
+            auctionHouse,
+        });
+
+        console.log('Found listings:', fetchedListings.length);
+        console.log('Fetched listings:', fetchedListings);
+
+        const transformedListings = await Promise.all(
+            fetchedListings.map(async (listing) => {
+                try {
+                    // Ensure the listing is fully loaded
+                    let loadedListing = listing;
+                    if (listing.lazy) {
+                        loadedListing = await metaplex.auctionHouse().loadListing({ lazyListing: listing });
+                    }
+
+                    // Get the NFT asset
+                    const asset = (loadedListing as any).asset;
+                    if (!asset) {
+                        console.warn("Skipping listing without asset:", loadedListing);
+                        return null; // Skip listings without assets
+                    }
+
+                    // Check if the listing is still valid and active
+                    try {
+                        const listingStatus = await metaplex.auctionHouse().findListingByTradeState({
+                            tradeStateAddress: loadedListing.tradeStateAddress,
+                            auctionHouse
+                        });
+
+                        // If we can find the listing, check if it's still active
+                        if (!listingStatus || (listingStatus as any).canceledAt) {
+                            console.log("Listing has been cancelled or is no longer valid:", loadedListing.tradeStateAddress.toString());
+                            return null;
+                        }
+                    } catch (error) {
+                        console.log("Listing no longer exists or has been cancelled:", loadedListing.tradeStateAddress.toString());
+                        return null;
+                    }
+
+                    // Fetch metadata if URI is available
+                    let metadata = null;
+                    if (asset.uri) {
+                        try {
+                            const httpUri = convertIPFStoHTTP(asset.uri);
+                            const response = await fetch(httpUri);
+                            metadata = await response.json();
+                        } catch (error) {
+                            console.error("Error fetching metadata for NFT:", asset.address.toString(), error);
+                        }
+                    }
+
+                    return {
+                        id: asset.address.toString(),
+                        name: asset.name || "Unnamed NFT",
+                        image: convertIPFStoHTTP(metadata?.image) || "/placeholder.png",
+                        price: (loadedListing as any).price.basisPoints.toNumber() / 1e9,
+                        rarity: metadata?.attributes?.find((attr: any) => attr.trait_type === "Rarity")?.value || "Common",
+                        attributes: metadata?.attributes?.reduce((acc: any, attr: any) => {
+                            acc[attr.trait_type] = attr.value;
+                            return acc;
+                        }, {}) || {},
+                        listing: loadedListing,
+                    };
+                } catch (err) {
+                    console.error("Error processing listing:", listing.tradeStateAddress.toString(), err);
+                    return null; // Skip invalid listings
+                }
+            })
+        );
+
+        // Remove null values (invalid listings, cancelled listings, or purchased NFTs)
+        const validListings = transformedListings.filter((listing) => listing !== null);
+        console.log('Final listings:', validListings);
+
+        setListings(validListings);
     } catch (error) {
-      console.error('Error fetching listings:', error);
+        console.error('Error fetching listings:', error);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
 
   useEffect(() => {
     fetchListings();
@@ -161,20 +184,189 @@ export default function MarketplacePage() {
     setShowUserNFTs(false);
   };
 
+  const handleBuy = async (listing: MetaplexListing | LazyListing) => {
+    if (!wallet.connected || !wallet.publicKey) {
+      alert("Please connect your wallet first");
+      return;
+    }
+
+    const connection = new Connection(clusterApiUrl("devnet"));
+    const metaplex = Metaplex.make(connection).use(
+      walletAdapterIdentity({ publicKey: wallet.publicKey, signTransaction: wallet.signTransaction })
+    );
+
+    try {
+      // Fetch auction house address from the API
+      const response = await fetch('/api/config');
+      if (!response.ok) {
+        throw new Error('Failed to fetch config');
+      }
+      const config = await response.json();
+
+      // Get auction house
+      const auctionHouse = await metaplex.auctionHouse().findByAddress({
+        address: new PublicKey(config.auctionHouseAddress),
+      });
+
+      // Load the listing if it's lazy
+      const loadedListing = listing.lazy
+        ? await metaplex.auctionHouse().loadListing({ lazyListing: listing })
+        : listing;
+
+      // Get the price in SOL
+      const listingPrice = (loadedListing as any).price;
+
+      // Check buyer's escrow balance
+      const buyerBalance = await metaplex.auctionHouse().getBuyerBalance({
+        auctionHouse: auctionHouse.address,
+        buyerAddress: wallet.publicKey,
+      });
+
+      console.log('Current buyer balance:', buyerBalance.basisPoints.toNumber() / 1e9);
+      console.log('Required price:', listingPrice.basisPoints.toNumber() / 1e9);
+
+      // If buyer doesn't have enough balance in escrow, deposit funds
+      if (buyerBalance.basisPoints < listingPrice.basisPoints) {
+        console.log('Depositing funds to buyer escrow...');
+        try {
+          await metaplex.auctionHouse().depositToBuyerAccount({
+            auctionHouse,
+            amount: listingPrice,
+          });
+          console.log('Successfully deposited funds to escrow');
+        } catch (depositError) {
+          console.error('Error depositing to escrow:', depositError);
+          throw new Error('Failed to deposit funds to escrow. Please try again.');
+        }
+      }
+
+      // Double check the balance after deposit
+      const updatedBalance = await metaplex.auctionHouse().getBuyerBalance({
+        auctionHouse: auctionHouse.address,
+        buyerAddress: wallet.publicKey,
+      });
+
+      if (updatedBalance.basisPoints < listingPrice.basisPoints) {
+        throw new Error('Insufficient funds in escrow account after deposit. Please try again.');
+      }
+
+      console.log('Executing buy transaction...');
+      // Execute direct buy
+      await metaplex.auctionHouse().buy({
+        auctionHouse,
+        listing: loadedListing,
+      });
+
+      alert('Purchase successful!');
+      
+      // Wait for a short time to ensure the blockchain state is updated
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Refresh listings to remove the purchased NFT
+      await fetchListings();
+      
+      // Force a re-render of the NFTGrid
+      setListings(prevListings => [...prevListings]);
+      
+    } catch (error) {
+      console.error('Error buying NFT:', error);
+      
+      // Try to withdraw funds from escrow if the buy failed
+      try {
+        const response = await fetch('/api/config');
+        if (response.ok) {
+          const config = await response.json();
+          const auctionHouse = await metaplex.auctionHouse().findByAddress({
+            address: new PublicKey(config.auctionHouseAddress),
+          });
+
+          const buyerBalance = await metaplex.auctionHouse().getBuyerBalance({
+            auctionHouse: auctionHouse.address,
+            buyerAddress: wallet.publicKey,
+          });
+
+          if (buyerBalance.basisPoints > 0) {
+            await metaplex.auctionHouse().withdrawFromBuyerAccount({
+              auctionHouse,
+              amount: buyerBalance,
+            });
+            console.log('Successfully withdrew funds from escrow after failed purchase');
+          }
+        }
+      } catch (withdrawError) {
+        console.error('Error withdrawing funds after failed purchase:', withdrawError);
+      }
+
+      alert('Failed to buy NFT. Please try again. If funds were deposited to escrow, they will be returned to your wallet.');
+    }
+  };
+
+  const handleCancelListing = async (listing: MetaplexListing | LazyListing) => {
+    if (!wallet.connected || !wallet.publicKey) {
+      alert("Please connect your wallet first");
+      return;
+    }
+
+    const connection = new Connection(clusterApiUrl("devnet"));
+    const metaplex = Metaplex.make(connection).use(
+      walletAdapterIdentity({ publicKey: wallet.publicKey, signTransaction: wallet.signTransaction })
+    );
+
+    try {
+      // Fetch auction house address from the API
+      const response = await fetch('/api/config');
+      if (!response.ok) {
+        throw new Error('Failed to fetch config');
+      }
+      const config = await response.json();
+
+      // Get auction house
+      const auctionHouse = await metaplex.auctionHouse().findByAddress({
+        address: new PublicKey(config.auctionHouseAddress),
+      });
+
+      // Load the listing if it's lazy
+      const loadedListing = listing.lazy
+        ? await metaplex.auctionHouse().loadListing({ lazyListing: listing })
+        : listing;
+
+      // Check if the current user is the seller
+      const sellerAddress = (loadedListing as any).sellerAddress;
+      if (sellerAddress.toString() !== wallet.publicKey.toString()) {
+        alert("You can only cancel your own listings");
+        return;
+      }
+
+      console.log('Cancelling listing...');
+      // Cancel the listing
+      await metaplex.auctionHouse().cancelListing({
+        auctionHouse,
+        listing: loadedListing,
+      });
+
+      alert('Listing cancelled successfully!');
+      
+      // Wait for a short time to ensure the blockchain state is updated
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Refresh listings to remove the cancelled listing
+      await fetchListings();
+      
+      // Force a re-render of the NFTGrid
+      setListings(prevListings => [...prevListings]);
+      
+    } catch (error) {
+      console.error('Error cancelling listing:', error);
+      alert('Failed to cancel listing. Please try again.');
+    }
+  };
+
   return (
     <main className="min-h-screen bg-black">
       <Navigation />
       <div className="pt-24 px-12 pb-24">
         <div className="flex justify-between items-center mb-12">
           <h1 className="text-5xl font-bold text-white font-dark-mystic">Marketplace</h1>
-          {wallet.connected && (
-            <button
-              onClick={fetchUserNFTs}
-              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-medium"
-            >
-              List Your NFT
-            </button>
-          )}
         </div>
         <div className="flex gap-8">
           <FilterSection filters={filters} setFilters={setFilters} />
@@ -199,6 +391,8 @@ export default function MarketplacePage() {
                 image: nft.image
               });
             }}
+            onBuy={handleBuy}
+            onCancelListing={handleCancelListing}
           />
         </div>
       </div>
