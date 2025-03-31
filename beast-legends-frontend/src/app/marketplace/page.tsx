@@ -8,6 +8,7 @@ import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Listing as MetaplexListing, LazyListing, NftWithToken } from "@metaplex-foundation/js";
+import Image from "next/image";
 
 interface Listing {
   id: string;
@@ -65,7 +66,7 @@ export default function MarketplacePage() {
 
   // Add filter state
   const [filters, setFilters] = useState({
-    priceRange: { min: 0, max: 5 },
+    priceRange: { min: 0, max: 20 },
     rarity: [],
     attributes: {},
     sortBy: "price_low_to_high"
@@ -361,12 +362,88 @@ export default function MarketplacePage() {
     }
   };
 
+  // Collection stats (dummy data)
+  const collectionStats = {
+    totalVolume: "130 SOL",
+    floorPrice: "4.5 SOL",
+    bestOffer: "1.5 SOL",
+    listed: "10%",
+    owners: "26 (43%)"
+  };
+
   return (
     <main className="min-h-screen bg-black">
       <Navigation />
-      <div className="pt-24 px-12 pb-24">
-        <div className="flex justify-between items-center mb-12">
-          <h1 className="text-5xl font-bold text-white font-dark-mystic">Marketplace</h1>
+      
+      {/* Collection Banner */}
+      <div className="w-full bg-gradient-to-b from-zinc-900 to-black">
+        <div className="relative w-full h-[500px]">
+          {/* Banner Image */}
+          <div className="absolute inset-0">
+            <Image
+              src="/marketplace/marketplace-bg2.png"
+              alt="Collection Banner"
+              fill
+              className="object-cover object-center"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80" />
+          </div>
+
+          {/* Collection Info */}
+          <div className="absolute bottom-0 left-0 right-0 p-8">
+            <div className="flex items-start gap-6">
+              {/* Collection Avatar */}
+              <div className="w-24 h-24 rounded-xl overflow-hidden border-2 border-purple-500">
+                <Image
+                  src="/favicon.png"
+                  alt="Collection Avatar"
+                  width={96}
+                  height={96}
+                  className="object-cover"
+                />
+              </div>
+
+              {/* Collection Details */}
+              <div className="flex-1">
+                <h1 className="text-4xl font-bold text-white mb-2 font-dark-mystic">Beast Legends Collection</h1>
+                <p className="text-gray-300 mb-4 max-w-2xl">
+                  Discover the mystical world of Beast Legends, where ancient creatures come to life as unique digital collectibles. Each beast carries its own story and power.
+                </p>
+                
+                {/* Collection Stats */}
+                <div className="flex gap-8 text-white">
+                  <div>
+                    <p className="text-xl font-bold">{collectionStats.totalVolume}</p>
+                    <p className="text-sm text-gray-400">Total volume</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold">{collectionStats.floorPrice}</p>
+                    <p className="text-sm text-gray-400">Floor price</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold">{collectionStats.bestOffer}</p>
+                    <p className="text-sm text-gray-400">Best offer</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold">{collectionStats.listed}</p>
+                    <p className="text-sm text-gray-400">Listed</p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold">{collectionStats.owners}</p>
+                    <p className="text-sm text-gray-400">Owners</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Existing Marketplace Content */}
+      <div className="px-12 pb-24">
+        <div className="flex justify-between items-center my-12">
+          <h2 className="text-3xl font-bold text-white font-dark-mystic">Listed NFTs</h2>
         </div>
         <div className="flex gap-8">
           <FilterSection filters={filters} setFilters={setFilters} />
