@@ -4,7 +4,11 @@ import React, { useEffect, useRef, useState } from "react";
 interface CardData {
   id: number | string;
   name: string;
-  description: string;
+  image: string;
+  price: number;
+  rarity: string;
+  attributes: Record<string, string>;
+  listing: any;
   [key: string]: any; // Allow for additional properties
 }
 

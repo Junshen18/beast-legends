@@ -1,6 +1,38 @@
 {
   "beasts": [
     {
+      "name": "Lion",
+      "img": "/marketplace/common.png",
+      "rarity": "Common",
+      "stats": {
+        "dodge": 10,
+        "health": 1200,
+        "attack": {
+          "min": 30,
+          "max": 100
+        }
+      },
+      "type": "Beast",
+      "element": "Water",
+      "anomaly": false
+    },
+    {
+      "name": "Lumina",
+      "img": "/marketplace/common-2.png",
+      "rarity": "Common",
+      "stats": {
+        "dodge": 15,
+        "health": 1000,
+        "attack": {
+          "min": 20,
+          "max": 80
+        }
+      },
+      "type": "Spirit",
+      "element": "Nature",
+      "anomaly": false
+    },
+    {
       "name": "Owlbear",
       "img": "/marketplace/rare.png",
       "rarity": "Rare",
@@ -32,22 +64,7 @@
       "element": "Fire",
       "anomaly": false
     },
-    {
-      "name": "Lion",
-      "img": "/marketplace/common.png",
-      "rarity": "Common",
-      "stats": {
-        "dodge": 10,
-        "health": 1200,
-        "attack": {
-          "min": 30,
-          "max": 100
-        }
-      },
-      "type": "Beast",
-      "element": "Water",
-      "anomaly": false
-    },
+    
     {
       "name": "Leviathan",
       "img": "/marketplace/epic-2.png",
@@ -95,22 +112,7 @@
       "element": "Fire",
       "anomaly": false
     },
-    {
-      "name": "Lumina",
-      "img": "/marketplace/common-2.png",
-      "rarity": "Common",
-      "stats": {
-        "dodge": 15,
-        "health": 1000,
-        "attack": {
-          "min": 20,
-          "max": 80
-        }
-      },
-      "type": "Spirit",
-      "element": "Nature",
-      "anomaly": false
-    },
+    
     {
       "name": "Aurelius",
       "img": "/marketplace/mythic-2.png",

@@ -13,6 +13,7 @@ import NFTModal from "../components/NFTModal";
 
 interface NFTData {
   address: string;
+  mintAddress: string;
   name: string;
   image: string;
   symbol: string;
@@ -86,7 +87,7 @@ export default function ProfilePage() {
       // Log each NFT's symbol to debug
       allNfts.forEach((nft: any) => {
         console.log(
-          `NFT ${nft.address.toString()} - Symbol: "${nft.symbol}", Name: "${
+          `NFT ${nft.mintAddress.toString()} - Symbol: "${nft.symbol}", Name: "${
             nft.name
           }"`
         );
@@ -111,7 +112,7 @@ export default function ProfilePage() {
                 nft.uri.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/")
               );
               metadata = await response.json();
-              console.log(`Metadata for ${nft.address.toString()}:`, metadata);
+              console.log(`Metadata for ${nft.mintAddress.toString()}:`, metadata);
             }
           } catch (error) {
             console.error(
@@ -123,6 +124,7 @@ export default function ProfilePage() {
 
           return {
             address: nft.address.toString(),
+            mintAddress: nft.mintAddress.toString(),
             name: nft.name || "Unnamed NFT",
             image:
               metadata?.image?.replace(
@@ -171,6 +173,7 @@ export default function ProfilePage() {
       if (nft.symbol === "BEAST") {
         const formattedNft = {
           address: nft.address.toString(),
+          mintAddress: nft.mintAddress.toString(),
           name: nft.name || "Unnamed NFT",
           image:
             nft.json?.image?.replace(
@@ -303,14 +306,14 @@ export default function ProfilePage() {
                       <div className="text-xs text-gray-400">
                         <span>NFT Address: </span>
                         <a
-                          href={`https://explorer.solana.com/address/${nft.address}?cluster=devnet`}
+                          href={`https://explorer.solana.com/address/${nft.mintAddress}?cluster=devnet`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-400 hover:text-blue-300"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          {nft.address.substring(0, 8)}...
-                          {nft.address.substring(nft.address.length - 8)}
+                          {nft.mintAddress.substring(0, 8)}...
+                          {nft.mintAddress.substring(nft.mintAddress.length - 8)}
                         </a>
                       </div>
                     </div>
@@ -331,6 +334,10 @@ export default function ProfilePage() {
             setSelectedNFT(null);
           }}
           nft={selectedNFT}
+          onListingSuccess={() => {
+            // Refresh NFTs after successful listing
+            fetchUserNFTs();
+          }}
         />
       )}
     </div>

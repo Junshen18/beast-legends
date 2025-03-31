@@ -1,56 +1,24 @@
 "use client";
 import React from "react";
 import GridListView from "../ui/GridListView";
-import Image from "next/image";
-
-// Mock NFT data - replace with your actual data fetching logic
-const mockNFTs = [
-  {
-    id: 1,
-    name: "Infernal Blaze Dragon #001",
-    description: "Inferno Warden - A blazing dragonborn ruler forged in the heart of eternal flames.",
-    price: 0.5,
-    image: "/marketplace/epic.png",
-    rarity: "Epic",
-  },
-  {
-    id: 2,
-    name: "Water Lion #042",
-    description: "Aqua Roar - The armored lion warrior who commands the tides with ferocious might.",
-    price: 0.1,
-    image: "/marketplace/common.png",
-    rarity: "Common",
-  },
-  {
-    id: 3,
-    name: "Vaelorith #103",
-    description: "Mystic Warden of the Forest - A celestial guardian infused with ancient magic and ethereal power.",
-    price: 1,
-    image: "/marketplace/mythic.png",
-    rarity: "Mythic",
-  },
-  {
-    id: 4,
-    name: "Owlbear #217",
-    description: "Stormborne Sentinel - An electrified guardian wielding the fury of the skies.",
-    price: 0.25,
-    image: "/marketplace/rare.png",
-    rarity: "Rare",
-  }
-];
+import NFTCard from "./NFTCard";
 
 interface NFTGridProps {
+  items: any[];
   filters: {
     priceRange: { min: number; max: number };
     rarity: string[];
-    attributes: Record<string, string[]>;
+    attributes: Record<string, string>;
     sortBy: string;
   };
+  loading: boolean;
+  wallet: any;
+  onListNFT: (nft: { mintAddress: string; name: string; image: string; }) => void;
 }
 
-const NFTGrid: React.FC<NFTGridProps> = ({ filters }) => {
+const NFTGrid: React.FC<NFTGridProps> = ({ items, filters, loading, wallet, onListNFT }) => {
   // Apply filters to NFTs
-  const filteredNFTs = mockNFTs.filter((nft) => {
+  const filteredNFTs = items.filter((nft) => {
     // Price filter
     if (
       nft.price < filters.priceRange.min ||
@@ -62,12 +30,17 @@ const NFTGrid: React.FC<NFTGridProps> = ({ filters }) => {
     // Rarity filter
     if (
       filters.rarity.length > 0 &&
-      !filters.rarity.includes(nft.rarity)
+      !filters.rarity.includes(nft.rarity || "Common")
     ) {
       return false;
     }
 
-    // Add more filters as needed
+    // Attribute filters
+    for (const [key, values] of Object.entries(filters.attributes)) {
+      if (values.length > 0 && !values.includes(nft.attributes[key])) {
+        return false;
+      }
+    }
 
     return true;
   });
@@ -79,82 +52,48 @@ const NFTGrid: React.FC<NFTGridProps> = ({ filters }) => {
         return a.price - b.price;
       case "price_high_to_low":
         return b.price - a.price;
-      case "name_a_to_z":
-        return a.name.localeCompare(b.name);
-      case "name_z_to_a":
-        return b.name.localeCompare(a.name);
+      case "recent":
+        return new Date(b.listing?.createdAt || 0).getTime() - new Date(a.listing?.createdAt || 0).getTime();
       default:
         return 0;
     }
   });
 
-  // Custom card renderer for NFTs - adapts based on view mode
-  const renderNFTCard = (nft: any, isListView: boolean) => {
-    if (isListView) {
-      // List view layout
-      return (
-        <div className="w-full h-full p-3 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-              <Image
-                src={nft.image}
-                alt={nft.name}
-                width={84}
-                height={150}
-                className="h-auto object-cover"
-              />
-            <div>
-              <h3 className="text-white text-lg font-semibold">{nft.name}</h3>
-              <span className="text-gray-400 text-sm line-clamp-1">{nft.description}</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="text-cyan-400 font-medium">{nft.price} SOL</div>
-            <div className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-xs px-2 py-1 rounded">
-              {nft.rarity}
-            </div>
-          </div>
-        </div>
-      );
-    } else {
-      // Grid view layout - portrait card with auto height
-      return (
-        <div className="w-full flex flex-col">
-          <div className="w-full rounded-md overflow-hidden">
-            <Image
-              src={nft.image}
-              alt={nft.name}
-              width={500}
-              height={892}
-              className="w-full h-auto object-cover"
-              priority
-            />
-          </div>
-          <div className="p-4 bg-gray-900">
-            <h3 className="text-white text-lg font-semibold">{nft.name}</h3>
-            <span className="text-gray-400 text-sm line-clamp-2">{nft.description}</span>
-            <div className="mt-3 pt-3 border-t border-gray-800 flex justify-between items-center">
-              <div className="text-cyan-400 font-medium">{nft.price} SOL</div>
-              <div className="bg-gradient-to-r from-purple-600 to-cyan-500 text-white text-xs px-2 py-1 rounded">
-                {nft.rarity}
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-  };
+  if (loading) {
+    return <div className="text-white">Loading NFTs...</div>;
+  }
 
   return (
     <div className="flex-1">
       <GridListView
-        data={sortedNFTs}
+        data={sortedNFTs.map(nft => ({
+          ...nft,
+          id: String(nft.id || nft.address || nft.mint), // Ensure id is always a string
+          rarity: nft.rarity || "Common" // Ensure rarity has a default value
+        }))}
         columns={4}
         cardWidth={300}
-        renderCard={renderNFTCard}
+        renderCard={(nft) => (
+          <NFTCard 
+            key={nft.id}
+            id={String(nft.id)}
+            name={nft.name}
+            image={nft.image}
+            price={nft.price}
+            rarity={nft.rarity || "Common"}
+            attributes={nft.attributes}
+            listing={nft.listing}
+            onList={() => onListNFT({
+              mintAddress: nft.mintAddress || nft.mint,  // Use mintAddress if available, fallback to mint
+              name: nft.name,
+              image: nft.image
+            })}
+          />
+        )}
         className="text-white"
       />
     </div>
   );
 };
 
-export default NFTGrid; 
+export default NFTGrid;

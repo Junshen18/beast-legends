@@ -10,7 +10,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center">
       {/* Backdrop */}
       <div 
         className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
@@ -30,7 +30,7 @@ export default function Modal({ isOpen, onClose, children }: ModalProps) {
         </button>
         
         {/* Modal body */}
-        <div className="p-6">
+        <div className="">
           {children}
         </div>
       </div>
