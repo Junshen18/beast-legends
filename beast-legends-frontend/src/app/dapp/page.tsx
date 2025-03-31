@@ -179,7 +179,7 @@ export default function Dapp() {
               className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${selectedTab === 'home' ? 'bg-purple-800' : 'hover:bg-gray-800'}`}
               onClick={() => setSelectedTab('home')}
             >
-              <Image src="/dapp/home-icon.png" alt="Home" width={24} height={24} />
+              {/* <Image src="/dapp/home-icon.png" alt="Home" width={24} height={24} /> */}
               <span className="font-medium">Home</span>
             </button>
             
@@ -187,7 +187,7 @@ export default function Dapp() {
               className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${selectedTab === 'beasts' ? 'bg-purple-800' : 'hover:bg-gray-800'}`}
               onClick={() => setSelectedTab('beasts')}
             >
-              <Image src="/dapp/beast-icon.png" alt="Beasts" width={24} height={24} />
+              {/* <Image src="/dapp/beast-icon.png" alt="Beasts" width={24} height={24} /> */}
               <span className="font-medium">My Beasts</span>
             </button>
             
@@ -195,7 +195,7 @@ export default function Dapp() {
               className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${selectedTab === 'shop' ? 'bg-purple-800' : 'hover:bg-gray-800'}`}
               onClick={() => setSelectedTab('shop')}
             >
-              <Image src="/dapp/shop-icon.png" alt="Shop" width={24} height={24} />
+              {/* <Image src="/dapp/shop-icon.png" alt="Shop" width={24} height={24} /> */}
               <span className="font-medium">Marketplace</span>
             </button>
             
@@ -203,7 +203,7 @@ export default function Dapp() {
               className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${selectedTab === 'leaderboard' ? 'bg-purple-800' : 'hover:bg-gray-800'}`}
               onClick={() => setSelectedTab('leaderboard')}
             >
-              <Image src="/dapp/leaderboard-icon.png" alt="Leaderboard" width={24} height={24} />
+              {/* <Image src="/dapp/leaderboard-icon.png" alt="Leaderboard" width={24} height={24} /> */}
               <span className="font-medium">Leaderboard</span>
             </button>
           </div>
@@ -276,6 +276,12 @@ export default function Dapp() {
                   if (activity.id === "battle") {
                     router.push(`/dapp/${activity.id}`);
                   }
+                  if (activity.id === "quest") {
+                    router.push(`/dapp/${activity.id}`);
+                  }
+                  if (activity.id === "shop") {
+                    router.push(`/dapp/${activity.id}`);
+                  }
                 }}
                 className={`${activity.color} rounded-xl overflow-hidden cursor-pointer group`}
               >
@@ -302,12 +308,12 @@ export default function Dapp() {
                 <h3 className="text-xl font-bold">DAILY TASKS</h3>
                 <p className="text-sm text-gray-300">2/5 Completed</p>
               </div>
-              <Image 
+              {/* <Image 
                 src="/dapp/task-icon.png" 
                 alt="Tasks" 
                 width={48} 
                 height={48} 
-              />
+              /> */}
             </div>
             
             <div className="bg-gray-800/60 backdrop-blur-sm rounded-xl p-4 flex items-center justify-between cursor-pointer hover:bg-gray-700/60 transition-colors">
@@ -315,12 +321,12 @@ export default function Dapp() {
                 <h3 className="text-xl font-bold">MARKETPLACE</h3>
                 <p className="text-sm text-gray-300">Buy & Sell Beasts</p>
               </div>
-              <Image 
+              {/* <Image 
                 src="/dapp/market-icon.png" 
                 alt="Marketplace" 
                 width={48} 
                 height={48} 
-              />
+              /> */}
             </div>
           </div>
         </div>
