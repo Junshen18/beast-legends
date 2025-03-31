@@ -155,7 +155,7 @@ export default function Navigation() {
             className={`md:${isOverWhiteSection ? "invert" : ""}`}
           />
         </Link>
-        <div className={`hidden md:flex flex-row items-center text-2xl ${isOverWhiteSection ? "text-black" : "text-white"}`}>
+        <div className={`hidden md:flex flex-row items-center gap-6 text-2xl ${isOverWhiteSection ? "text-black" : "text-white"}`}>
             {data.navigation.links.map(renderNavLink)}
           </div>
         {/* Desktop Navigation */}

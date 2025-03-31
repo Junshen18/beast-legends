@@ -9,6 +9,7 @@ import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
 import { useWallet } from '@solana/wallet-adapter-react';
 import { Listing as MetaplexListing, LazyListing, NftWithToken } from "@metaplex-foundation/js";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Listing {
   id: string;
@@ -373,119 +374,146 @@ export default function MarketplacePage() {
 
   return (
     <main className="min-h-screen bg-black">
-      <Navigation />
-      
-      {/* Collection Banner */}
-      <div className="w-full bg-gradient-to-b from-zinc-900 to-black">
-        <div className="relative w-full h-[500px]">
-          {/* Banner Image */}
-          <div className="absolute inset-0">
-            <Image
-              src="/marketplace/marketplace-bg2.png"
-              alt="Collection Banner"
-              fill
-              className="object-cover object-center"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80" />
-          </div>
+      {/* Mobile Warning - Only shown on small screens */}
+      <div className="lg:hidden fixed inset-0 z-50 bg-black flex flex-col items-center justify-center p-6 text-center">
+        <Image
+          src="/favicon.png"
+          alt="Beast Legends"
+          width={80}
+          height={80}
+          className="mb-6"
+        />
+        <h2 className="text-2xl font-bold text-white mb-4 font-dark-mystic">
+          Please Open on Desktop
+        </h2>
+        <p className="text-gray-300 max-w-md mb-6">
+          The Beast Legends marketplace is optimized for desktop viewing. Please open this page on a laptop or desktop computer for the best experience.
+        </p>
+        <Link 
+          href="/"
+          className="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3 rounded-lg font-bold hover:from-purple-700 hover:to-blue-700 transition-colors"
+        >
+          Return to Home
+        </Link>
+      </div>
 
-          {/* Collection Info */}
-          <div className="absolute bottom-0 left-0 right-0 p-8">
-            <div className="flex items-start gap-6">
-              {/* Collection Avatar */}
-              <div className="w-24 h-24 rounded-xl overflow-hidden border-2 border-purple-500">
-                <Image
-                  src="/favicon.png"
-                  alt="Collection Avatar"
-                  width={96}
-                  height={96}
-                  className="object-cover"
-                />
-              </div>
+      {/* Main content - Hidden on mobile, shown on larger screens */}
+      <div className="hidden lg:block">
+        <Navigation />
+        
+        {/* Collection Banner */}
+        <div className="w-full bg-gradient-to-b from-zinc-900 to-black">
+          <div className="relative w-full h-[500px]">
+            {/* Banner Image */}
+            <div className="absolute inset-0">
+              <Image
+                src="/marketplace/marketplace-bg2.png"
+                alt="Collection Banner"
+                fill
+                className="object-cover object-center"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80" />
+            </div>
 
-              {/* Collection Details */}
-              <div className="flex-1">
-                <h1 className="text-4xl font-bold text-white mb-2 font-dark-mystic">Beast Legends Collection</h1>
-                <p className="text-gray-300 mb-4 max-w-2xl">
-                  Discover the mystical world of Beast Legends, where ancient creatures come to life as unique digital collectibles. Each beast carries its own story and power.
-                </p>
-                
-                {/* Collection Stats */}
-                <div className="flex gap-8 text-white">
-                  <div>
-                    <p className="text-xl font-bold">{collectionStats.totalVolume}</p>
-                    <p className="text-sm text-gray-400">Total volume</p>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold">{collectionStats.floorPrice}</p>
-                    <p className="text-sm text-gray-400">Floor price</p>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold">{collectionStats.bestOffer}</p>
-                    <p className="text-sm text-gray-400">Best offer</p>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold">{collectionStats.listed}</p>
-                    <p className="text-sm text-gray-400">Listed</p>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold">{collectionStats.owners}</p>
-                    <p className="text-sm text-gray-400">Owners</p>
+            {/* Collection Info */}
+            <div className="absolute bottom-0 left-0 right-0 p-8">
+              <div className="flex items-start gap-6">
+                {/* Collection Avatar */}
+                <div className="w-24 h-24 rounded-xl overflow-hidden border-2 border-purple-500">
+                  <Image
+                    src="/favicon.png"
+                    alt="Collection Avatar"
+                    width={96}
+                    height={96}
+                    className="object-cover"
+                  />
+                </div>
+
+                {/* Collection Details */}
+                <div className="flex-1">
+                  <h1 className="text-4xl font-bold text-white mb-2 font-dark-mystic">Beast Legends Collection</h1>
+                  <p className="text-gray-300 mb-4 max-w-2xl">
+                    Discover the mystical world of Beast Legends, where ancient creatures come to life as unique digital collectibles. Each beast carries its own story and power.
+                  </p>
+                  
+                  {/* Collection Stats */}
+                  <div className="flex gap-8 text-white">
+                    <div>
+                      <p className="text-xl font-bold">{collectionStats.totalVolume}</p>
+                      <p className="text-sm text-gray-400">Total volume</p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold">{collectionStats.floorPrice}</p>
+                      <p className="text-sm text-gray-400">Floor price</p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold">{collectionStats.bestOffer}</p>
+                      <p className="text-sm text-gray-400">Best offer</p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold">{collectionStats.listed}</p>
+                      <p className="text-sm text-gray-400">Listed</p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold">{collectionStats.owners}</p>
+                      <p className="text-sm text-gray-400">Owners</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Existing Marketplace Content */}
-      <div className="px-12 pb-24">
-        <div className="flex justify-between items-center my-12">
-          <h2 className="text-3xl font-bold text-white font-dark-mystic">Listed NFTs</h2>
+        {/* Existing Marketplace Content */}
+        <div className="px-12 pb-24">
+          <div className="flex justify-between items-center my-12">
+            <h2 className="text-3xl font-bold text-white font-dark-mystic">Listed NFTs</h2>
+          </div>
+          <div className="flex gap-8">
+            <FilterSection filters={filters} setFilters={setFilters} />
+            <NFTGrid 
+              items={showUserNFTs ? userNFTs : listings} 
+              filters={filters}
+              loading={loading}
+              wallet={wallet}
+              onListNFT={(nft) => {
+                if (!nft.mintAddress) {
+                  console.error('No mint address provided for NFT');
+                  return;
+                }
+                console.log('Selected NFT:', {
+                  mintAddress: nft.mintAddress,
+                  name: nft.name,
+                  image: nft.image
+                });
+                setSelectedNFT({
+                  mint: nft.mintAddress,
+                  name: nft.name,
+                  image: nft.image
+                });
+              }}
+              onBuy={handleBuy}
+              onCancelListing={handleCancelListing}
+            />
+          </div>
         </div>
-        <div className="flex gap-8">
-          <FilterSection filters={filters} setFilters={setFilters} />
-          <NFTGrid 
-            items={showUserNFTs ? userNFTs : listings} 
-            filters={filters}
-            loading={loading}
-            wallet={wallet}
-            onListNFT={(nft) => {
-              if (!nft.mintAddress) {
-                console.error('No mint address provided for NFT');
-                return;
-              }
-              console.log('Selected NFT:', {
-                mintAddress: nft.mintAddress,
-                name: nft.name,
-                image: nft.image
-              });
-              setSelectedNFT({
-                mint: nft.mintAddress,
-                name: nft.name,
-                image: nft.image
-              });
+
+        {/* Listing Modal */}
+        {selectedNFT && (
+          <ListingModal
+            isOpen={!!selectedNFT}
+            onClose={() => setSelectedNFT(null)}
+            nft={{
+              mintAddress: selectedNFT.mint,
+              name: selectedNFT.name,
+              image: selectedNFT.image
             }}
-            onBuy={handleBuy}
-            onCancelListing={handleCancelListing}
+            onSuccess={handleListingSuccess}
           />
-        </div>
+        )}
       </div>
-
-      {selectedNFT && (
-        <ListingModal
-          isOpen={!!selectedNFT}
-          onClose={() => setSelectedNFT(null)}
-          nft={{
-            mintAddress: selectedNFT.mint,
-            name: selectedNFT.name,
-            image: selectedNFT.image
-          }}
-          onSuccess={handleListingSuccess}
-        />
-      )}
     </main>
   );
 }
