@@ -83,6 +83,7 @@
     },
     {
       "name": "Vaelorith",
+      "img": "/marketplace/mythic.png",
       "rarity": "Mythic",
       "stats": {
         "dodge": 20,
