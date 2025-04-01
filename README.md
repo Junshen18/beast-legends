@@ -55,8 +55,8 @@ yarn install
 ```env
 PINATA_API_KEY= 
 PINATA_SECRET_API_KEY= 
-ADMIN_PRIVATE_KEY= #not import for user to run the project
-NEXT_PUBLIC_AUCTION_HOUSE_ADDRESS= #not import for user to run the project
+ADMIN_PRIVATE_KEY= #not important for user to run the project
+NEXT_PUBLIC_AUCTION_HOUSE_ADDRESS= #not important for user to run the project
 ```
 
 4. Run the development server:
@@ -101,7 +101,7 @@ The marketplace is configured through the following files:
 - `src/app/api/config/route.ts`: API endpoint for configuration
 - Environment variables for network and contract addresses
 
-```## 🔒 Security Considerations
+```##
 
 - All transactions are signed by the user's wallet
 - IPFS URLs are properly converted to HTTP URLs
@@ -129,3 +129,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Tailwind CSS](https://tailwindcss.com/) for the styling
 - [AceternityUI](https://ui.aceternity.com/) for some ui components
 - [Midjourney](https://www.midjourney.com/) for the illustration
+```
